@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Nothing X Band</string>
+    <string name="brand_title">NOTHING X // WRISTBAND OS</string>
+    <string name="screenless_mode">Screenless Mode</string>
+    <string name="device_subtitle">CMF Watch Pro 2 (Model D398) • FW 1.0.1.77 • Display Bypass Active</string>
+    <string name="tab_hub">01 // Hub</string>
+    <string name="tab_workout">02 // Workouts</string>
+    <string name="tab_vitals">03 // Vitals</string>
+    <string name="tab_alarms">04 // Alarms</string>
+    <string name="tab_console">05 // BLE &amp; Touch</string>
+    <string name="pair_real_ble">Scan &amp; Pair BLE</string>
+    <string name="ble_diagnostics">BLE Protocol &amp; Fix</string>
+    <string name="crown_home_reset">Crown Home Reset</string>
+    <string name="vibrate_find_watch">Vibrate / Find Watch</string>
+    <string name="sync_time_tz">Sync Time &amp; TZ</string>
+    <string name="dead_screen_guard">Dead-Screen Guard Mode</string>
+    <string name="dead_screen_guard_desc">Disables Lift-to-Wake, AOD &amp; Touch-Wake to prevent accidental ghost touches on your blacked-out display.</string>
+</resources>

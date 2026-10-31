@@ -1,0 +1,6 @@
+{
+  "name": "Nothing X Band",
+  "description": "Headless Wristband OS and Native BLE GATT Controller for CMF Watch Pro 2 (Model D398) with live optical PPG vitals, remote GPS workouts, haptic alarms, and blind-touch digitizer map.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

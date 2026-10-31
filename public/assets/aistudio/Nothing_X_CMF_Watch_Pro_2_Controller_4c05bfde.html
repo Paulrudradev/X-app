@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="en" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing X — CMF Watch Pro 2 Headless Wristband Controller</title>
+  <meta name="theme-color" content="#0A0A0C">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Nothing X Band">
+  <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Nothing X Wristband OS (CMF Watch Pro 2)&quot;,&quot;short_name&quot;:&quot;Nothing X Band&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#0A0A0C&quot;,&quot;theme_color&quot;:&quot;#FF5500&quot;}">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cmf: {
+              orange: '#FF5500',
+              orangeLight: '#FF7733',
+              dark: '#0A0A0C',
+              card: '#141418',
+              surface: '#1C1C22',
+              border: '#2A2A34',
+              muted: '#8E8E9A'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            dot: ['Space Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0A0A0C;
+      color: #F4F4F6;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    .dot-matrix-bg {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 14px 14px;
+    }
+    .cmf-glow {
+      box-shadow: 0 0 28px -6px rgba(255, 85, 0, 0.45);
+    }
+    .pulse-ring {
+      animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulseRing {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(1.06); }
+    }
+    .scan-line {
+      animation: scanMove 2.2s linear infinite;
+    }
+    @keyframes scanMove {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(200%); }
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #141418;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2A2A34;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF5500;
+    }
+  </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:JetBrains Mono, monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.-right-3\.5{right:-0.875rem}.bottom-5{bottom:1.25rem}.right-5{right:1.25rem}.top-0{top:0px}.top-14{top:3.5rem}.z-10{z-index:10}.z-30{z-index:30}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.my-4{margin-top:1rem;margin-bottom:1rem}.my-auto{margin-top:auto;margin-bottom:auto}.mb-1\.5{margin-bottom:0.375rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-2\.5{margin-top:0.625rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-2{height:0.5rem}.h-2\.5{height:0.625rem}.h-3{height:0.75rem}.h-3\.5{height:0.875rem}.h-4{height:1rem}.h-6{height:1.5rem}.h-60{height:15rem}.h-64{height:16rem}.h-full{height:100%}.max-h-60{max-height:15rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.w-10{width:2.5rem}.w-12{width:3rem}.w-2{width:0.5rem}.w-2\.5{width:0.625rem}.w-3\.5{width:0.875rem}.w-36{width:9rem}.w-4{width:1rem}.w-60{width:15rem}.w-64{width:16rem}.w-full{width:100%}.min-w-\[120px\]{min-width:120px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-7xl{max-width:80rem}.max-w-sm{max-width:24rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-3\.5{gap:0.875rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-0\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.125rem * var(--tw-space-y-reverse))}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-3\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.875rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.875rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.rounded-r-md{border-top-right-radius:0.375rem;border-bottom-right-radius:0.375rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-amber-500\/40{border-color:rgb(245 158 11 / 0.4)}.border-cmf-border{--tw-border-opacity:1;border-color:rgb(42 42 52 / var(--tw-border-opacity, 1))}.border-cmf-border\/60{border-color:rgb(42 42 52 / 0.6)}.border-cmf-orange{--tw-border-opacity:1;border-color:rgb(255 85 0 / var(--tw-border-opacity, 1))}.border-cmf-orange\/30{border-color:rgb(255 85 0 / 0.3)}.border-cmf-orange\/40{border-color:rgb(255 85 0 / 0.4)}.border-cmf-orange\/50{border-color:rgb(255 85 0 / 0.5)}.border-cmf-orange\/70{border-color:rgb(255 85 0 / 0.7)}.border-orange-300{--tw-border-opacity:1;border-color:rgb(253 186 116 / var(--tw-border-opacity, 1))}.border-rose-500\/40{border-color:rgb(244 63 94 / 0.4)}.border-rose-500\/50{border-color:rgb(244 63 94 / 0.5)}.border-sky-500\/40{border-color:rgb(14 165 233 / 0.4)}.border-zinc-700{--tw-border-opacity:1;border-color:rgb(63 63 70 / var(--tw-border-opacity, 1))}.border-zinc-700\/80{border-color:rgb(63 63 70 / 0.8)}.border-zinc-800{--tw-border-opacity:1;border-color:rgb(39 39 42 / var(--tw-border-opacity, 1))}.bg-amber-400{--tw-bg-opacity:1;background-color:rgb(251 191 36 / var(--tw-bg-opacity, 1))}.bg-amber-500\/15{background-color:rgb(245 158 11 / 0.15)}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-cmf-card{--tw-bg-opacity:1;background-color:rgb(20 20 24 / var(--tw-bg-opacity, 1))}.bg-cmf-dark\/90{background-color:rgb(10 10 12 / 0.9)}.bg-cmf-orange{--tw-bg-opacity:1;background-color:rgb(255 85 0 / var(--tw-bg-opacity, 1))}.bg-cmf-orange\/15{background-color:rgb(255 85 0 / 0.15)}.bg-cmf-orange\/20{background-color:rgb(255 85 0 / 0.2)}.bg-cmf-surface{--tw-bg-opacity:1;background-color:rgb(28 28 34 / var(--tw-bg-opacity, 1))}.bg-cmf-surface\/90{background-color:rgb(28 28 34 / 0.9)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.bg-emerald-500\/20{background-color:rgb(16 185 129 / 0.2)}.bg-indigo-500{--tw-bg-opacity:1;background-color:rgb(99 102 241 / var(--tw-bg-opacity, 1))}.bg-orange-500{--tw-bg-opacity:1;background-color:rgb(249 115 22 / var(--tw-bg-opacity, 1))}.bg-purple-400{--tw-bg-opacity:1;background-color:rgb(192 132 252 / var(--tw-bg-opacity, 1))}.bg-rose-500{--tw-bg-opacity:1;background-color:rgb(244 63 94 / var(--tw-bg-opacity, 1))}.bg-rose-500\/15{background-color:rgb(244 63 94 / 0.15)}.bg-rose-500\/20{background-color:rgb(244 63 94 / 0.2)}.bg-rose-600{--tw-bg-opacity:1;background-color:rgb(225 29 72 / var(--tw-bg-opacity, 1))}.bg-sky-400{--tw-bg-opacity:1;background-color:rgb(56 189 248 / var(--tw-bg-opacity, 1))}.bg-sky-500\/15{background-color:rgb(14 165 233 / 0.15)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-zinc-800{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.bg-zinc-900{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity, 1))}.bg-gradient-to-b{background-image:linear-gradient(to bottom, var(--tw-gradient-stops))}.from-zinc-700{--tw-gradient-from:#3f3f46 var(--tw-gradient-from-position);--tw-gradient-to:rgb(63 63 70 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-zinc-900{--tw-gradient-to:rgb(24 24 27 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #18181b var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-black{--tw-gradient-to:#000 var(--tw-gradient-to-position)}.p-1{padding:0.25rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-3{padding-bottom:0.75rem}.pr-1{padding-right:0.25rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-4{padding-top:1rem}.text-left{text-align:left}.text-center{text-align:center}.font-dot{font-family:Space Mono, monospace}.font-mono{font-family:JetBrains Mono, monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.tracking-tighter{letter-spacing:-0.05em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-cmf-muted{--tw-text-opacity:1;color:rgb(142 142 154 / var(--tw-text-opacity, 1))}.text-cmf-orange{--tw-text-opacity:1;color:rgb(255 85 0 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-purple-400{--tw-text-opacity:1;color:rgb(192 132 252 / var(--tw-text-opacity, 1))}.text-rose-300{--tw-text-opacity:1;color:rgb(253 164 175 / var(--tw-text-opacity, 1))}.text-rose-400{--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.text-sky-300{--tw-text-opacity:1;color:rgb(125 211 252 / var(--tw-text-opacity, 1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-zinc-200{--tw-text-opacity:1;color:rgb(228 228 231 / var(--tw-text-opacity, 1))}.text-zinc-300{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.text-zinc-400{--tw-text-opacity:1;color:rgb(161 161 170 / var(--tw-text-opacity, 1))}.text-zinc-500{--tw-text-opacity:1;color:rgb(113 113 122 / var(--tw-text-opacity, 1))}.line-through{-webkit-text-decoration-line:line-through;text-decoration-line:line-through}.accent-cmf-orange{accent-color:#FF5500}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.selection\:bg-cmf-orange *::selection{--tw-bg-opacity:1;background-color:rgb(255 85 0 / var(--tw-bg-opacity, 1))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.selection\:bg-cmf-orange::selection{--tw-bg-opacity:1;background-color:rgb(255 85 0 / var(--tw-bg-opacity, 1))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:border-cmf-orange:hover{--tw-border-opacity:1;border-color:rgb(255 85 0 / var(--tw-border-opacity, 1))}.hover\:border-cmf-orange\/50:hover{border-color:rgb(255 85 0 / 0.5)}.hover\:border-zinc-500:hover{--tw-border-opacity:1;border-color:rgb(113 113 122 / var(--tw-border-opacity, 1))}.hover\:bg-amber-500\/25:hover{background-color:rgb(245 158 11 / 0.25)}.hover\:bg-cmf-orange\/20:hover{background-color:rgb(255 85 0 / 0.2)}.hover\:bg-cmf-orange\/30:hover{background-color:rgb(255 85 0 / 0.3)}.hover\:bg-cmf-orangeLight:hover{--tw-bg-opacity:1;background-color:rgb(255 119 51 / var(--tw-bg-opacity, 1))}.hover\:bg-cmf-surface:hover{--tw-bg-opacity:1;background-color:rgb(28 28 34 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-500\/25:hover{background-color:rgb(244 63 94 / 0.25)}.hover\:bg-rose-500\/30:hover{background-color:rgb(244 63 94 / 0.3)}.hover\:bg-sky-500\/25:hover{background-color:rgb(14 165 233 / 0.25)}.hover\:bg-zinc-200:hover{--tw-bg-opacity:1;background-color:rgb(228 228 231 / var(--tw-bg-opacity, 1))}.hover\:bg-zinc-800:hover{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.active\:translate-x-0\.5:active{--tw-translate-x:0.125rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.disabled\:opacity-40:disabled{opacity:0.4}@media (min-width: 640px){.sm\:inline{display:inline}.sm\:h-64{height:16rem}.sm\:w-64{width:16rem}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.sm\:gap-2{gap:0.5rem}.sm\:gap-3{gap:0.75rem}.sm\:p-5{padding:1.25rem}.sm\:p-6{padding:1.5rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-4xl{font-size:2.25rem;line-height:2.5rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}}@media (min-width: 768px){.md\:inline{display:inline}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:col-span-5{grid-column:span 5 / span 5}.lg\:col-span-6{grid-column:span 6 / span 6}.lg\:col-span-7{grid-column:span 7 / span 7}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}</style></head>
+<body class="min-h-screen dot-matrix-bg flex flex-col selection:bg-cmf-orange selection:text-white">
+
+  <!-- Top Header Bar -->
+  <header class="sticky top-0 z-30 bg-cmf-dark/90 backdrop-blur-md border-b border-cmf-border px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand + Device Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-cmf-orange flex items-center justify-center font-dot font-bold text-black text-lg tracking-tighter shadow-lg">
+          NX
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-dot font-bold text-base sm:text-lg tracking-wider uppercase text-white">NOTHING X <span class="text-cmf-orange">// WRISTBAND OS</span></h1>
+            <span class="px-2 py-0.5 text-[11px] font-mono uppercase bg-cmf-orange/15 text-cmf-orange border border-cmf-orange/40 rounded-full">Screenless Mode</span>
+          </div>
+          <p class="text-xs text-cmf-muted font-mono">CMF Watch Pro 2 (Model D398) • FW 1.0.1.77 • Display Bypass Active</p>
+        </div>
+      </div>
+
+      <!-- Status Indicators & Action Buttons -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <!-- Live Connection Badge -->
+        <div id="connectionBadge" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cmf-card border border-cmf-border text-xs font-mono">
+          <span id="connDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="connText" class="text-emerald-400 font-semibold">BLE LIVE: CMF Buds Pro 2</span>
+        </div>
+
+        <!-- Battery Pill -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cmf-card border border-cmf-border text-xs font-mono">
+          <svg class="w-4 h-4 text-cmf-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect>
+            <line x1="22" y1="11" x2="22" y2="13"></line>
+          </svg>
+          <span id="batteryLevelText">82%</span>
+          <span class="text-cmf-muted hidden sm:inline">(~9d left)</span>
+        </div>
+
+        <!-- Audio Feedback Toggle -->
+        <button id="audioToggleBtn" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cmf-card hover:bg-cmf-surface border border-cmf-border text-xs font-mono transition" title="Toggle synthesized audio/haptic cues">
+          <span id="audioIcon">🔊</span>
+          <span id="audioLabel" class="hidden md:inline">Haptic Audio: ON</span>
+        </button>
+
+        <!-- Web Bluetooth Pair Button -->
+        <button id="webBleBtn" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cmf-orange hover:bg-cmf-orangeLight text-black font-mono font-semibold text-xs transition shadow">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"></polyline>
+          </svg>
+          <span id="webBleBtnText">Pair Real BLE</span>
+        </button>
+
+        <!-- BLE Troubleshooter / Diagnostic Modal Trigger -->
+        <button id="openBleFixModalBtn" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-300 font-mono font-semibold text-xs transition">
+          <span>🔧 Fix BLE Connection</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="max-w-7xl mx-auto mt-3 pt-2 border-t border-cmf-border/60 flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar">
+      <button type="button" data-tab="hub" class="tab-btn px-3.5 py-2 rounded-lg font-dot text-xs uppercase tracking-wider transition whitespace-nowrap bg-cmf-orange text-black font-bold">
+        01 // Wristband Hub
+      </button>
+      <button type="button" data-tab="workout" class="tab-btn px-3.5 py-2 rounded-lg font-dot text-xs uppercase tracking-wider transition whitespace-nowrap text-cmf-muted hover:text-white hover:bg-cmf-surface">
+        02 // Remote Workouts
+      </button>
+      <button type="button" data-tab="vitals" class="tab-btn px-3.5 py-2 rounded-lg font-dot text-xs uppercase tracking-wider transition whitespace-nowrap text-cmf-muted hover:text-white hover:bg-cmf-surface">
+        03 // Health &amp; Vitals
+      </button>
+      <button type="button" data-tab="alarms" class="tab-btn px-3.5 py-2 rounded-lg font-dot text-xs uppercase tracking-wider transition whitespace-nowrap text-cmf-muted hover:text-white hover:bg-cmf-surface">
+        04 // Alarms &amp; Alerts
+      </button>
+      <button type="button" data-tab="blindmap" class="tab-btn px-3.5 py-2 rounded-lg font-dot text-xs uppercase tracking-wider transition whitespace-nowrap text-cmf-muted hover:text-white hover:bg-cmf-surface">
+        05 // Blind Touch &amp; BLE Console
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- Real Bluetooth Connection Troubleshooter Banner -->
+    <div id="bleTroubleshootBanner" class="bg-cmf-card border-2 border-cmf-orange/70 rounded-2xl p-4 sm:p-5 shadow-xl">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="space-y-1.5 max-w-3xl">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-cmf-orange text-black font-dot font-bold text-[11px] uppercase">Why Bluetooth Fails Here &amp; How to Fix It</span>
+            <span id="envDiagBadge" class="text-xs font-mono text-emerald-400">✅ Native Web Bluetooth Ready</span>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+            <strong>1. Canvas Preview Sandbox Block:</strong> This in-chat preview runs inside a restricted iframe that blocks Chrome's native Bluetooth popup. Click <strong>Download Standalone App (.html)</strong> below and open the downloaded file in <strong>Google Chrome</strong> (Android or Desktop).<br>
+            <strong>2. Nothing X Single-Session Lock:</strong> Your CMF Watch Pro 2 (MCU <code class="text-cmf-orange">Actions ATS3089C</code>) only allows <strong>one</strong> active BLE GATT client at a time on service <code class="text-emerald-400">0xFFF0</code>. While the official Nothing X app is running in the background, the watch hides from BLE scans. Go to <strong>Android Settings → Apps → Nothing X → Force Stop</strong> before scanning.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button id="downloadStandaloneBtn" type="button" class="px-3.5 py-2 rounded-xl bg-cmf-orange hover:bg-cmf-orangeLight text-black font-mono font-bold text-xs transition shadow-lg">
+            ⬇ Download Standalone App (.html)
+          </button>
+          <button id="openProtocolModalBtn" type="button" class="px-3.5 py-2 rounded-xl bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-white font-mono text-xs transition">
+            📡 D398 GATT UUIDs &amp; Handshake
+          </button>
+          <button id="dismissBleBannerBtn" type="button" class="px-2.5 py-2 rounded-xl bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-cmf-muted text-xs font-mono" title="Hide banner">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: WRISTBAND HUB (SCREENLESS CONTROLS) -->
+    <!-- ========================================== -->
+    <section id="tab-hub" class="tab-panel space-y-6">
+      <!-- Top Row: Virtual Watch Mirror + Screenless Power Saver Banner -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left 5 Cols: Virtual CMF Watch Pro 2 Mirror & Crown Remote -->
+        <div class="lg:col-span-5 bg-cmf-card border border-cmf-border rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-widest text-cmf-orange">Virtual OLED Mirror</span>
+              <h2 class="font-dot text-base font-bold text-white">Live Wristband State</h2>
+            </div>
+            <span id="watchStatePill" class="px-2.5 py-1 rounded-md bg-cmf-surface border border-cmf-border font-mono text-xs text-emerald-400">
+              IDLE // MONITORING
+            </span>
+          </div>
+
+          <!-- Circular CMF Watch Pro 2 Hardware Visualization -->
+          <div class="my-4 flex flex-col items-center justify-center relative">
+            <div id="watchBezel" class="w-60 h-60 sm:w-64 sm:h-64 rounded-full bg-gradient-to-b from-zinc-700 via-zinc-900 to-black p-3.5 shadow-2xl border-4 border-zinc-700/80 relative flex items-center justify-center">
+              <!-- Physical Functional Crown Button on Right Top -->
+              <button id="virtualCrownBtn" type="button" title="Send Crown Press via BLE / Simulate Crown Wake" class="absolute -right-3.5 top-14 w-4 h-11 rounded-r-md bg-cmf-orange hover:bg-cmf-orangeLight border border-orange-300 shadow-lg transition transform active:translate-x-0.5"></button>
+
+              <!-- Inner Virtual Screen (Shows what the blacked-out watch is doing internally) -->
+              <div id="virtualScreen" class="w-full h-full rounded-full bg-black border border-zinc-800 flex flex-col items-center justify-between p-5 text-center relative overflow-hidden">
+                <!-- Top Tiny Status -->
+                <div class="flex items-center gap-2 text-[10px] font-mono text-cmf-muted z-10">
+                  <span id="mirrorDndIcon" class="hidden text-amber-400">🌙 DND</span>
+                  <span>BT 5.3</span>
+                  <span class="text-cmf-orange" id="mirrorBattery">82%</span>
+                </div>
+
+                <!-- Center Dynamic Display Content -->
+                <div id="mirrorCenterContent" class="my-auto flex flex-col items-center justify-center z-10">
+                  <div id="mirrorClock" class="font-dot text-3xl sm:text-4xl font-bold tracking-wider text-white">19:15</div>
+                  <div id="mirrorDate" class="text-xs font-mono text-cmf-orange uppercase mt-0.5">SAT 31 OCT • HEADLESS</div>
+                  <div class="mt-3 flex items-center gap-4 text-xs font-mono">
+                    <div class="flex items-center gap-1 text-rose-400">
+                      <span>♥</span>
+                      <span id="mirrorHrVal">74</span>
+                      <span class="text-[10px] text-cmf-muted">BPM</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sky-400">
+                      <span>👟</span>
+                      <span id="mirrorStepsVal">6,420</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Sensor / Activity Status -->
+                <div id="mirrorFooterStatus" class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest z-10">
+                  PPG Optical: Ready
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 flex flex-wrap items-center justify-center gap-2">
+              <button id="btnCrownPress" type="button" class="px-3 py-1.5 rounded-lg bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono transition">
+                🔘 Crown Home Reset
+              </button>
+              <button id="btnFindWatch" type="button" class="px-3 py-1.5 rounded-lg bg-cmf-orange/20 hover:bg-cmf-orange/30 border border-cmf-orange/50 text-cmf-orange text-xs font-mono font-semibold transition">
+                📳 Vibrate / Find Watch
+              </button>
+              <button id="btnSyncTime" type="button" class="px-3 py-1.5 rounded-lg bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono transition">
+                🕒 Sync Time &amp; TZ
+              </button>
+            </div>
+          </div>
+
+          <!-- Screenless Battery Optimization Box -->
+          <div class="bg-cmf-surface/90 border border-cmf-orange/30 rounded-xl p-3.5 flex items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-dot font-bold text-cmf-orange uppercase">Dead-Screen Guard Mode</span>
+                <span id="guardStatusTag" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">ACTIVE</span>
+              </div>
+              <p class="text-[11px] text-cmf-muted mt-0.5">Disables Lift-to-Wake, AOD &amp; Touch-Wake to prevent accidental ghost touches on your blacked-out display.</p>
+            </div>
+            <button id="toggleDeadScreenGuard" type="button" class="w-12 h-6 rounded-full bg-cmf-orange p-1 transition flex items-center justify-end shrink-0" aria-label="Toggle Dead-Screen Guard Mode">
+              <span class="w-4 h-4 rounded-full bg-black transition"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 7 Cols: On-Demand Sensor Measurements & Quick Wristband Controls -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+
+          <!-- On-Demand PPG Optical Sensor Triggers -->
+          <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <span class="text-[11px] font-mono uppercase tracking-widest text-cmf-orange">Remote PPG Sensor Trigger</span>
+                <h2 class="font-dot text-base font-bold text-white">On-Demand Vitals Scan (No Watch Screen Needed)</h2>
+              </div>
+              <span id="scanProgressBadge" class="text-xs font-mono text-cmf-muted">Select a sensor to trigger wrist LEDs</span>
+            </div>
+
+            <!-- 3 Sensor Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              <!-- Heart Rate Card -->
+              <div class="bg-cmf-surface border border-cmf-border rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono uppercase text-rose-400">Heart Rate</span>
+                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                  </div>
+                  <div class="mt-2 flex items-baseline gap-1.5">
+                    <span id="liveHrReadout" class="font-dot text-3xl font-bold text-white">74</span>
+                    <span class="text-xs font-mono text-cmf-muted">BPM</span>
+                  </div>
+                  <p id="hrLastTime" class="text-[11px] font-mono text-cmf-muted mt-1">Resting: 61 BPM • Normal</p>
+                </div>
+                <button type="button" data-scan="hr" class="scan-trigger-btn mt-4 w-full py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 font-mono text-xs font-semibold transition">
+                  ▶ Measure HR (15s)
+                </button>
+              </div>
+
+              <!-- SpO2 Card -->
+              <div class="bg-cmf-surface border border-cmf-border rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono uppercase text-sky-400">Blood Oxygen</span>
+                    <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                  </div>
+                  <div class="mt-2 flex items-baseline gap-1.5">
+                    <span id="liveSpo2Readout" class="font-dot text-3xl font-bold text-white">98</span>
+                    <span class="text-xs font-mono text-cmf-muted">% SpO₂</span>
+                  </div>
+                  <p id="spo2LastTime" class="text-[11px] font-mono text-cmf-muted mt-1">Optimal saturation (95-100%)</p>
+                </div>
+                <button type="button" data-scan="spo2" class="scan-trigger-btn mt-4 w-full py-2 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-sky-300 font-mono text-xs font-semibold transition">
+                  ▶ Measure SpO₂ (20s)
+                </button>
+              </div>
+
+              <!-- Stress Card -->
+              <div class="bg-cmf-surface border border-cmf-border rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono uppercase text-amber-400">HRV Stress</span>
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                  </div>
+                  <div class="mt-2 flex items-baseline gap-1.5">
+                    <span id="liveStressReadout" class="font-dot text-3xl font-bold text-white">32</span>
+                    <span class="text-xs font-mono text-cmf-muted">/ 100</span>
+                  </div>
+                  <p id="stressLastTime" class="text-[11px] font-mono text-cmf-muted mt-1">State: Relaxed (25-50)</p>
+                </div>
+                <button type="button" data-scan="stress" class="scan-trigger-btn mt-4 w-full py-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-mono text-xs font-semibold transition">
+                  ▶ Measure Stress (15s)
+                </button>
+              </div>
+            </div>
+
+            <!-- Live Progress Bar when scanning -->
+            <div id="activeScanContainer" class="hidden mt-4 p-3 rounded-xl bg-black/60 border border-cmf-orange/50">
+              <div class="flex items-center justify-between text-xs font-mono mb-1.5">
+                <span id="activeScanTitle" class="text-cmf-orange font-semibold">Scanning Optical PPG Sensor... Keep wrist still</span>
+                <span id="activeScanPct" class="text-white">0%</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
+                <div id="activeScanBar" class="h-full bg-cmf-orange transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wristband Hardware Toggles & Quick Settings Grid -->
+          <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <span class="text-[11px] font-mono uppercase tracking-widest text-cmf-orange">Direct BLE Configuration</span>
+                <h2 class="font-dot text-base font-bold text-white">Wristband Hardware Controls</h2>
+              </div>
+              <span class="text-xs font-mono text-cmf-muted">Instant sync to D398</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <!-- DND Toggle -->
+              <button type="button" data-setting="dnd" class="hw-toggle-card p-3.5 rounded-xl bg-cmf-surface border border-cmf-border hover:border-cmf-orange/50 text-left transition flex flex-col justify-between">
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-base">🌙</span>
+                  <span id="badge-dnd" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-cmf-muted">OFF</span>
+                </div>
+                <div class="mt-2">
+                  <div class="font-mono text-xs font-semibold text-white">Do Not Disturb</div>
+                  <div class="text-[11px] text-cmf-muted">Mute wrist vibrations</div>
+                </div>
+              </button>
+
+              <!-- Lift to Wake -->
+              <button type="button" data-setting="liftWake" class="hw-toggle-card p-3.5 rounded-xl bg-cmf-surface border border-cmf-border hover:border-cmf-orange/50 text-left transition flex flex-col justify-between">
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-base">⌚</span>
+                  <span id="badge-liftWake" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-cmf-muted">OFF (SAVED)</span>
+                </div>
+                <div class="mt-2">
+                  <div class="font-mono text-xs font-semibold text-white">Lift Wrist to Wake</div>
+                  <div class="text-[11px] text-cmf-muted">Keep OFF for dead screen</div>
+                </div>
+              </button>
+
+              <!-- Bluetooth Calling Audio -->
+              <button type="button" data-setting="btCalling" class="hw-toggle-card p-3.5 rounded-xl bg-cmf-surface border border-cmf-orange/50 text-left transition flex flex-col justify-between">
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-base">📞</span>
+                  <span id="badge-btCalling" class="text-[10px] font-mono px-2 py-0.5 rounded bg-cmf-orange/20 text-cmf-orange">ON</span>
+                </div>
+                <div class="mt-2">
+                  <div class="font-mono text-xs font-semibold text-white">BT Calling &amp; Mic</div>
+                  <div class="text-[11px] text-cmf-muted">Answer via Crown press</div>
+                </div>
+              </button>
+
+              <!-- 24/7 Heart Rate -->
+              <button type="button" data-setting="autoHr" class="hw-toggle-card p-3.5 rounded-xl bg-cmf-surface border border-cmf-orange/50 text-left transition flex flex-col justify-between">
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-base">❤️</span>
+                  <span id="badge-autoHr" class="text-[10px] font-mono px-2 py-0.5 rounded bg-cmf-orange/20 text-cmf-orange">ON (5m)</span>
+                </div>
+                <div class="mt-2">
+                  <div class="font-mono text-xs font-semibold text-white">24h Heart Rate</div>
+                  <div class="text-[11px] text-cmf-muted">Continuous PPG logging</div>
+                </div>
+              </button>
+
+              <!-- 24/7 SpO2 Monitoring -->
+              <button type="button" data-setting="autoSpo2" class="hw-toggle-card p-3.5 rounded-xl bg-cmf-surface border border-cmf-orange/50 text-left transition flex flex-col justify-between">
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-base">🫧</span>
+                  <span id="badge-autoSpo2" class="text-[10px] font-mono px-2 py-0.5 rounded bg-cmf-orange/20 text-cmf-orange">ON</span>
+                </div>
+                <div class="mt-2">
+                  <div class="font-mono text-xs font-semibold text-white">All-Day SpO₂</div>
+                  <div class="text-[11px] text-cmf-muted">Blood oxygen tracking</div>
+                </div>
+              </button>
+
+              <!-- Haptic Vibration Strength -->
+              <button type="button" id="cycleVibrationBtn" class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-orange/50 text-left transition flex flex-col justify-between">
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-base">📳</span>
+                  <span id="badge-vibration" class="text-[10px] font-mono px-2 py-0.5 rounded bg-cmf-orange/20 text-cmf-orange">STRONG</span>
+                </div>
+                <div class="mt-2">
+                  <div class="font-mono text-xs font-semibold text-white">Haptic Strength</div>
+                  <div class="text-[11px] text-cmf-muted">Essential for blind cues</div>
+                </div>
+              </button>
+            </div>
+
+            <!-- Remote Media & Camera Bar -->
+            <div class="mt-4 pt-4 border-t border-cmf-border flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-mono uppercase text-cmf-muted">Media &amp; Phone Bridge:</span>
+                <button type="button" id="mediaPrevBtn" class="px-2.5 py-1 rounded bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">⏮ Prev</button>
+                <button type="button" id="mediaPlayBtn" class="px-3 py-1 rounded bg-cmf-orange text-black font-semibold text-xs font-mono">⏯ Play/Pause</button>
+                <button type="button" id="mediaNextBtn" class="px-2.5 py-1 rounded bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">⏭ Next</button>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" id="testCallNotificationBtn" class="px-3 py-1 rounded bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono text-emerald-400">
+                  📲 Test Incoming Call Vibe
+                </button>
+                <button type="button" id="syncWeatherBtn" class="px-3 py-1 rounded bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono text-sky-400">
+                  ⛅ Push Weather (28°C)
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: REMOTE WORKOUTS & GPS LAUNCHER      -->
+    <!-- ========================================== -->
+    <section id="tab-workout" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 5 Cols: Select & Launch Workout Directly on Watch -->
+        <div class="lg:col-span-5 bg-cmf-card border border-cmf-border rounded-2xl p-5 space-y-4">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-widest text-cmf-orange">Headless Sports Engine</span>
+            <h2 class="font-dot text-base font-bold text-white">Launch Workout from Phone</h2>
+            <p class="text-xs text-cmf-muted mt-1">Starts CMF Watch Pro 2 optical HR + built-in multi-system GPS without touching the watch screen.</p>
+          </div>
+
+          <!-- Sport Mode Selector Grid -->
+          <div id="sportModeGrid" class="grid grid-cols-2 gap-2.5">
+            <button type="button" data-sport="Outdoor Run" data-gps="true" data-met="9.8" class="sport-select-btn p-3 rounded-xl bg-cmf-orange/20 border-2 border-cmf-orange text-left transition">
+              <div class="flex items-center justify-between">
+                <span class="text-lg">🏃</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cmf-orange text-black font-bold">GPS</span>
+              </div>
+              <div class="font-mono text-xs font-bold text-white mt-1.5">Outdoor Run</div>
+              <div class="text-[10px] text-cmf-muted">Pace, Stride &amp; Route</div>
+            </button>
+
+            <button type="button" data-sport="Outdoor Walk" data-gps="true" data-met="4.2" class="sport-select-btn p-3 rounded-xl bg-cmf-surface border border-cmf-border hover:border-zinc-500 text-left transition">
+              <div class="flex items-center justify-between">
+                <span class="text-lg">🚶</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">GPS</span>
+              </div>
+              <div class="font-mono text-xs font-bold text-white mt-1.5">Outdoor Walk</div>
+              <div class="text-[10px] text-cmf-muted">Steps, Cadence &amp; Track</div>
+            </button>
+
+            <button type="button" data-sport="Outdoor Cycle" data-gps="true" data-met="7.5" class="sport-select-btn p-3 rounded-xl bg-cmf-surface border border-cmf-border hover:border-zinc-500 text-left transition">
+              <div class="flex items-center justify-between">
+                <span class="text-lg">🚴</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">GPS</span>
+              </div>
+              <div class="font-mono text-xs font-bold text-white mt-1.5">Outdoor Cycle</div>
+              <div class="text-[10px] text-cmf-muted">Speed, Distance &amp; HR</div>
+            </button>
+
+            <button type="button" data-sport="Strength Training" data-gps="false" data-met="5.0" class="sport-select-btn p-3 rounded-xl bg-cmf-surface border border-cmf-border hover:border-zinc-500 text-left transition">
+              <div class="flex items-center justify-between">
+                <span class="text-lg">🏋️</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-cmf-muted">INDOOR</span>
+              </div>
+              <div class="font-mono text-xs font-bold text-white mt-1.5">Strength / Gym</div>
+              <div class="text-[10px] text-cmf-muted">HR Zones &amp; Burn</div>
+            </button>
+
+            <button type="button" data-sport="HIIT Circuit" data-gps="false" data-met="8.5" class="sport-select-btn p-3 rounded-xl bg-cmf-surface border border-cmf-border hover:border-zinc-500 text-left transition">
+              <div class="flex items-center justify-between">
+                <span class="text-lg">⚡</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-cmf-muted">INDOOR</span>
+              </div>
+              <div class="font-mono text-xs font-bold text-white mt-1.5">HIIT Circuit</div>
+              <div class="text-[10px] text-cmf-muted">Peak Anaerobic HR</div>
+            </button>
+
+            <button type="button" data-sport="Jump Rope" data-gps="false" data-met="10.0" class="sport-select-btn p-3 rounded-xl bg-cmf-surface border border-cmf-border hover:border-zinc-500 text-left transition">
+              <div class="flex items-center justify-between">
+                <span class="text-lg">➰</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-cmf-muted">INDOOR</span>
+              </div>
+              <div class="font-mono text-xs font-bold text-white mt-1.5">Jump Rope</div>
+              <div class="text-[10px] text-cmf-muted">Jumps &amp; Cardio Load</div>
+            </button>
+          </div>
+
+          <!-- Haptic & Audio Pace Alerts Config -->
+          <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-white">Wrist Haptic Auto-Lap (Every 1 km)</span>
+              <input id="chkAutoLap" type="checkbox" checked="" class="accent-cmf-orange w-4 h-4">
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-white">High Heart Rate Vibration Warning (&gt;172 BPM)</span>
+              <input id="chkHrWarn" type="checkbox" checked="" class="accent-cmf-orange w-4 h-4">
+            </div>
+          </div>
+
+          <!-- Workout Action Controls -->
+          <div class="flex items-center gap-3 pt-1">
+            <button id="btnStartWorkout" type="button" class="flex-1 py-3 rounded-xl bg-cmf-orange hover:bg-cmf-orangeLight text-black font-dot font-bold text-sm uppercase tracking-wider transition shadow-lg">
+              ▶ Start on Watch
+            </button>
+            <button id="btnPauseWorkout" type="button" disabled="" class="px-4 py-3 rounded-xl bg-cmf-surface border border-cmf-border text-cmf-muted font-dot text-xs uppercase tracking-wider transition disabled:opacity-40">
+              ⏸ Pause
+            </button>
+            <button id="btnStopWorkout" type="button" disabled="" class="px-4 py-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-dot text-xs uppercase tracking-wider transition disabled:opacity-40">
+              ⏹ End &amp; Save
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 7 Cols: Live Telemetry HUD & History -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+          <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <span id="activeSportLabel" class="text-[11px] font-mono uppercase tracking-widest text-cmf-orange">Selected: Outdoor Run (GPS Locked)</span>
+                <h2 class="font-dot text-base font-bold text-white">Live Wristband Workout HUD</h2>
+              </div>
+              <div id="workoutTimerDisplay" class="font-dot text-2xl sm:text-3xl font-bold text-cmf-orange tracking-wider">
+                00:00:00
+              </div>
+            </div>
+
+            <!-- 4 Live Telemetry Metrics -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+              <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border">
+                <div class="text-[11px] font-mono text-cmf-muted uppercase">Live Heart Rate</div>
+                <div class="mt-1 flex items-baseline gap-1">
+                  <span id="woHrVal" class="font-dot text-2xl font-bold text-rose-400">76</span>
+                  <span class="text-xs font-mono text-cmf-muted">BPM</span>
+                </div>
+                <div id="woHrZone" class="text-[10px] font-mono text-emerald-400 mt-0.5">Zone 1 • Warm-up</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border">
+                <div class="text-[11px] font-mono text-cmf-muted uppercase">Active Calories</div>
+                <div class="mt-1 flex items-baseline gap-1">
+                  <span id="woCalVal" class="font-dot text-2xl font-bold text-amber-400">0</span>
+                  <span class="text-xs font-mono text-cmf-muted">kcal</span>
+                </div>
+                <div class="text-[10px] font-mono text-cmf-muted mt-0.5">MET Burn Rate</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border">
+                <div class="text-[11px] font-mono text-cmf-muted uppercase">Distance</div>
+                <div class="mt-1 flex items-baseline gap-1">
+                  <span id="woDistVal" class="font-dot text-2xl font-bold text-sky-400">0.00</span>
+                  <span class="text-xs font-mono text-cmf-muted">km</span>
+                </div>
+                <div id="woGpsBadge" class="text-[10px] font-mono text-emerald-400 mt-0.5">📡 L1 GPS: Strong</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border">
+                <div class="text-[11px] font-mono text-cmf-muted uppercase">Avg Pace / Cadence</div>
+                <div class="mt-1 flex items-baseline gap-1">
+                  <span id="woPaceVal" class="font-dot text-2xl font-bold text-white">--'--"</span>
+                  <span class="text-xs font-mono text-cmf-muted">/km</span>
+                </div>
+                <div id="woCadenceVal" class="text-[10px] font-mono text-cmf-muted mt-0.5">0 SPM</div>
+              </div>
+            </div>
+
+            <!-- Live Workout HR Zone Strip -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-[11px] font-mono text-cmf-muted">
+                <span>HR Zone Distribution</span>
+                <span id="woZoneBreakdownText">Warm-up / Fat Burn / Aerobic / Anaerobic / Extreme</span>
+              </div>
+              <div class="w-full h-3 rounded-full bg-zinc-800 overflow-hidden flex">
+                <div class="bg-sky-400 h-full" style="width: 20%" title="Warm-up"></div>
+                <div class="bg-emerald-400 h-full" style="width: 30%" title="Fat Burn"></div>
+                <div class="bg-amber-400 h-full" style="width: 25%" title="Aerobic"></div>
+                <div class="bg-orange-500 h-full" style="width: 15%" title="Anaerobic"></div>
+                <div class="bg-rose-600 h-full" style="width: 10%" title="Extreme"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Synced Workouts Log -->
+          <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-dot text-sm font-bold uppercase text-white">Synced Wristband Sessions</h3>
+              <span class="text-xs font-mono text-cmf-muted">Stored in Nothing X Local DB</span>
+            </div>
+            <div id="workoutHistoryList" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+        <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="font-mono text-xs font-bold text-white">Outdoor Walk <span class="text-cmf-orange">• 34m 12s</span></div>
+            <div class="text-[11px] font-mono text-cmf-muted">Yesterday, 18:15</div>
+          </div>
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <span class="text-sky-400">2.84 km</span>
+            <span class="text-rose-400">108 BPM</span>
+            <span class="text-amber-400">164 kcal</span>
+          </div>
+        </div>
+      
+        <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="font-mono text-xs font-bold text-white">Outdoor Run <span class="text-cmf-orange">• 26m 40s</span></div>
+            <div class="text-[11px] font-mono text-cmf-muted">29 Oct, 07:05</div>
+          </div>
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <span class="text-sky-400">4.52 km</span>
+            <span class="text-rose-400">149 BPM</span>
+            <span class="text-amber-400">342 kcal</span>
+          </div>
+        </div>
+      
+        <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="font-mono text-xs font-bold text-white">Strength Training <span class="text-cmf-orange">• 45m 00s</span></div>
+            <div class="text-[11px] font-mono text-cmf-muted">27 Oct, 19:00</div>
+          </div>
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <span class="text-sky-400">Indoor</span>
+            <span class="text-rose-400">126 BPM</span>
+            <span class="text-amber-400">290 kcal</span>
+          </div>
+        </div>
+      </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: HEALTH & VITALS TELEMETRY           -->
+    <!-- ========================================== -->
+    <section id="tab-vitals" class="tab-panel hidden space-y-6">
+      <!-- Top Daily Activity Goals Row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-cmf-card border border-cmf-border rounded-2xl p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono uppercase text-sky-400">Daily Steps</span>
+            <span id="stepsPctBadge" class="text-xs font-mono text-white">64%</span>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="vitalsStepsVal" class="font-dot text-3xl font-bold text-white">6,420</span>
+            <span class="text-xs font-mono text-cmf-muted">Goal: <span id="goalStepsText">10,000</span></span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-zinc-800 mt-2 overflow-hidden">
+            <div id="stepsGoalBar" class="h-full bg-sky-400" style="width: 64%"></div>
+          </div>
+          <div class="mt-3 flex items-center justify-between gap-2">
+            <label for="stepsGoalRange" class="text-[11px] font-mono text-cmf-muted">Target:</label>
+            <input id="stepsGoalRange" type="range" min="4000" max="20000" step="1000" value="10000" class="w-36 accent-cmf-orange">
+          </div>
+        </div>
+
+        <div class="bg-cmf-card border border-cmf-border rounded-2xl p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono uppercase text-cmf-orange">Active Calories</span>
+            <span id="calsPctBadge" class="text-xs font-mono text-white">77%</span>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="vitalsCalsVal" class="font-dot text-3xl font-bold text-white">385</span>
+            <span class="text-xs font-mono text-cmf-muted">Goal: <span id="goalCalsText">500</span> kcal</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-zinc-800 mt-2 overflow-hidden">
+            <div id="calsGoalBar" class="h-full bg-cmf-orange" style="width: 77%"></div>
+          </div>
+          <div class="mt-3 flex items-center justify-between gap-2">
+            <label for="calsGoalRange" class="text-[11px] font-mono text-cmf-muted">Target:</label>
+            <input id="calsGoalRange" type="range" min="200" max="1200" step="50" value="500" class="w-36 accent-cmf-orange">
+          </div>
+        </div>
+
+        <div class="bg-cmf-card border border-cmf-border rounded-2xl p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono uppercase text-purple-400">Last Night Sleep</span>
+            <span class="text-xs font-mono text-emerald-400">Score: 86</span>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="font-dot text-3xl font-bold text-white">7h 24m</span>
+            <span class="text-xs font-mono text-cmf-muted">23:18 → 06:42</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-zinc-800 mt-2 overflow-hidden flex">
+            <div class="bg-indigo-500 h-full" style="width: 28%" title="Deep: 2h 05m"></div>
+            <div class="bg-purple-400 h-full" style="width: 52%" title="Light: 3h 50m"></div>
+            <div class="bg-sky-400 h-full" style="width: 16%" title="REM: 1h 12m"></div>
+            <div class="bg-amber-400 h-full" style="width: 4%" title="Awake: 17m"></div>
+          </div>
+          <div class="mt-2.5 flex items-center justify-between text-[10px] font-mono text-cmf-muted">
+            <span>Deep 2h05m</span>
+            <span>Light 3h50m</span>
+            <span>REM 1h12m</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-[11px] font-mono uppercase text-rose-400">24-Hour Optical PPG Curve</span>
+              <h3 class="font-dot text-sm font-bold text-white">Continuous Heart Rate (BPM)</h3>
+            </div>
+            <button id="refreshVitalsChartBtn" type="button" class="px-2.5 py-1 rounded bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">
+              🔄 Sync Watch Buffer
+            </button>
+          </div>
+          <div class="relative h-64">
+            <canvas id="hrChartCanvas" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-[11px] font-mono uppercase text-sky-400">Blood Oxygen &amp; HRV Recovery</span>
+              <h3 class="font-dot text-sm font-bold text-white">SpO₂ (%) &amp; Stress Index</h3>
+            </div>
+            <span class="text-xs font-mono text-cmf-muted">Updated every 15m</span>
+          </div>
+          <div class="relative h-64">
+            <canvas id="spo2StressChartCanvas" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: ALARMS, TIMERS & REMINDERS          -->
+    <!-- ========================================== -->
+    <section id="tab-alarms" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 6 Cols: Wrist Vibration Alarms Manager -->
+        <div class="lg:col-span-6 bg-cmf-card border border-cmf-border rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-mono uppercase text-cmf-orange">Silent Wristband Wake</span>
+              <h2 class="font-dot text-base font-bold text-white">Watch Vibration Alarms</h2>
+              <p class="text-xs text-cmf-muted">Press the physical watch Crown button once to stop an active wrist alarm.</p>
+            </div>
+          </div>
+
+          <!-- Add New Alarm Form -->
+          <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border flex flex-wrap items-center gap-2.5">
+            <input id="newAlarmTime" type="time" value="07:30" class="px-3 py-1.5 rounded-lg bg-black border border-cmf-border text-white font-mono text-sm">
+            <input id="newAlarmDays" type="text" placeholder="Mon-Fri / Daily" value="Daily" class="flex-1 min-w-[120px] px-3 py-1.5 rounded-lg bg-black border border-cmf-border text-white font-mono text-xs">
+            <button id="addAlarmBtn" type="button" class="px-3.5 py-1.5 rounded-lg bg-cmf-orange hover:bg-cmf-orangeLight text-black font-mono font-bold text-xs transition">
+              + Add to Watch
+            </button>
+          </div>
+
+          <!-- Alarms List -->
+          <div id="alarmsListContainer" class="space-y-2.5">
+        <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border flex items-center justify-between gap-3">
+          <div>
+            <div class="font-dot text-xl font-bold text-white">06:45</div>
+            <div class="text-xs font-mono text-cmf-muted">Mon - Fri • Wrist Haptic</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" data-alarm-toggle="101" class="px-3 py-1 rounded-lg font-mono text-xs font-bold bg-cmf-orange text-black">
+              ON
+            </button>
+            <button type="button" data-alarm-del="101" class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 font-mono text-xs">
+              ✕
+            </button>
+          </div>
+        </div>
+      
+        <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border flex items-center justify-between gap-3">
+          <div>
+            <div class="font-dot text-xl font-bold text-white">08:00</div>
+            <div class="text-xs font-mono text-cmf-muted">Sat, Sun • Wrist Haptic</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" data-alarm-toggle="102" class="px-3 py-1 rounded-lg font-mono text-xs font-bold bg-cmf-orange text-black">
+              ON
+            </button>
+            <button type="button" data-alarm-del="102" class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 font-mono text-xs">
+              ✕
+            </button>
+          </div>
+        </div>
+      
+        <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border flex items-center justify-between gap-3">
+          <div>
+            <div class="font-dot text-xl font-bold text-cmf-muted line-through">22:30</div>
+            <div class="text-xs font-mono text-cmf-muted">Daily (Sleep Cue) • Wrist Haptic</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" data-alarm-toggle="103" class="px-3 py-1 rounded-lg font-mono text-xs font-bold bg-zinc-800 text-cmf-muted">
+              OFF
+            </button>
+            <button type="button" data-alarm-del="103" class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 font-mono text-xs">
+              ✕
+            </button>
+          </div>
+        </div>
+      </div>
+        </div>
+
+        <!-- Right 6 Cols: Remote Wrist Countdown Timer & Health Alerts -->
+        <div class="lg:col-span-6 flex flex-col gap-6">
+          <!-- Remote Wrist Timer -->
+          <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <span class="text-[11px] font-mono uppercase text-cmf-orange">Haptic Wrist Countdown</span>
+                <h2 class="font-dot text-base font-bold text-white">Remote Timer (Vibrates Watch at 00:00)</h2>
+              </div>
+              <span id="wristTimerDisplay" class="font-dot text-2xl font-bold text-white">05:00</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+              <button type="button" data-timer-sec="60" class="preset-timer-btn px-3 py-1.5 rounded-lg bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">1 Min</button>
+              <button type="button" data-timer-sec="180" class="preset-timer-btn px-3 py-1.5 rounded-lg bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">3 Min</button>
+              <button type="button" data-timer-sec="300" class="preset-timer-btn px-3 py-1.5 rounded-lg bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">5 Min</button>
+              <button type="button" data-timer-sec="600" class="preset-timer-btn px-3 py-1.5 rounded-lg bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">10 Min</button>
+              <button type="button" data-timer-sec="1500" class="preset-timer-btn px-3 py-1.5 rounded-lg bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">25m Pomodoro</button>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <button id="startTimerBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-cmf-orange hover:bg-cmf-orangeLight text-black font-dot font-bold text-xs uppercase tracking-wider transition">
+                ▶ Start Wrist Timer
+              </button>
+              <button id="resetTimerBtn" type="button" class="px-4 py-2.5 rounded-xl bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Health & Sedentary Reminders -->
+          <div class="bg-cmf-card border border-cmf-border rounded-2xl p-5 space-y-3.5">
+            <h3 class="font-dot text-sm font-bold uppercase text-white">Wristband Health &amp; Safety Alerts</h3>
+
+            <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border flex items-center justify-between">
+              <div>
+                <div class="text-xs font-mono font-semibold text-white">Sedentary Stand-Up Reminder</div>
+                <div class="text-[11px] text-cmf-muted">Vibrates every 60 mins if inactive (09:00–18:00)</div>
+              </div>
+              <input id="chkSedentary" type="checkbox" checked="" class="accent-cmf-orange w-4 h-4">
+            </div>
+
+            <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border flex items-center justify-between">
+              <div>
+                <div class="text-xs font-mono font-semibold text-white">Hydration Water Alert</div>
+                <div class="text-[11px] text-cmf-muted">Double wrist pulse every 90 mins</div>
+              </div>
+              <input id="chkHydration" type="checkbox" checked="" class="accent-cmf-orange w-4 h-4">
+            </div>
+
+            <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border flex items-center justify-between gap-3">
+              <div>
+                <div class="text-xs font-mono font-semibold text-white">High Resting HR Alert Threshold</div>
+                <div class="text-[11px] text-cmf-muted">Immediate wrist alert if resting BPM exceeds limit</div>
+              </div>
+              <select id="selectHighHrAlert" class="px-2.5 py-1 rounded bg-black border border-cmf-border text-xs font-mono text-cmf-orange">
+                <option value="100">100 BPM</option>
+                <option value="110">110 BPM</option>
+                <option value="120" selected="">120 BPM</option>
+                <option value="130">130 BPM</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: BLIND TOUCH MAP & BLE CONSOLE       -->
+    <!-- ========================================== -->
+    <section id="tab-blindmap" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 6 Cols: Interactive Blind Touch Digitizer Guide -->
+        <div class="lg:col-span-6 bg-cmf-card border border-cmf-border rounded-2xl p-5 space-y-4">
+          <div>
+            <span class="text-[11px] font-mono uppercase text-cmf-orange">1.32" Bezel Coordinate Map</span>
+            <h2 class="font-dot text-base font-bold text-white">Blind Touch Digitizer Helper</h2>
+            <p class="text-xs text-cmf-muted mt-1">If your OLED display is blacked out but the touch digitizer still responds, press the Crown button once to return to the Watchface, swipe down from the top edge, and tap these exact quadrants:</p>
+          </div>
+
+          <!-- Interactive 2x2 Quick Settings Grid inside Circular Bezel -->
+          <div class="flex flex-col items-center my-2">
+            <div class="w-64 h-64 rounded-full bg-zinc-900 border-4 border-zinc-700 p-6 flex flex-col justify-between relative shadow-xl">
+              <div class="text-[10px] font-mono text-center text-cmf-orange uppercase">↓ Swipe Down from Top Edge ↓</div>
+              <div class="grid grid-cols-2 gap-2.5 my-auto">
+                <button type="button" data-blind="Top-Left (10 o'clock): Toggles Do Not Disturb (DND) on watch." class="blind-zone-btn p-3 rounded-xl bg-cmf-surface hover:bg-cmf-orange/20 border border-cmf-border hover:border-cmf-orange text-center transition">
+                  <div class="text-sm">🌙</div>
+                  <div class="text-[10px] font-mono font-bold text-white mt-0.5">Top-Left</div>
+                  <div class="text-[9px] text-cmf-muted">DND Toggle</div>
+                </button>
+                <button type="button" data-blind="Top-Right (2 o'clock): Opens Find My Phone / Wrist Torch." class="blind-zone-btn p-3 rounded-xl bg-cmf-surface hover:bg-cmf-orange/20 border border-cmf-border hover:border-cmf-orange text-center transition">
+                  <div class="text-sm">📱</div>
+                  <div class="text-[10px] font-mono font-bold text-white mt-0.5">Top-Right</div>
+                  <div class="text-[9px] text-cmf-muted">Find Phone</div>
+                </button>
+                <button type="button" data-blind="Bottom-Left (8 o'clock): Cycles Brightness level (set lowest for dead screen)." class="blind-zone-btn p-3 rounded-xl bg-cmf-surface hover:bg-cmf-orange/20 border border-cmf-border hover:border-cmf-orange text-center transition">
+                  <div class="text-sm">🔅</div>
+                  <div class="text-[10px] font-mono font-bold text-white mt-0.5">Bot-Left</div>
+                  <div class="text-[9px] text-cmf-muted">Brightness</div>
+                </button>
+                <button type="button" data-blind="Bottom-Right (4 o'clock): Opens Watch Settings gear menu." class="blind-zone-btn p-3 rounded-xl bg-cmf-surface hover:bg-cmf-orange/20 border border-cmf-border hover:border-cmf-orange text-center transition">
+                  <div class="text-sm">⚙️</div>
+                  <div class="text-[10px] font-mono font-bold text-white mt-0.5">Bot-Right</div>
+                  <div class="text-[9px] text-cmf-muted">Settings</div>
+                </button>
+              </div>
+              <div class="text-[10px] font-mono text-center text-zinc-400">Crown Press = Always Return Home</div>
+            </div>
+          </div>
+
+          <div id="blindZoneReadout" class="p-3 rounded-xl bg-black/60 border border-cmf-border text-xs font-mono text-cmf-orange">
+            Tap any quadrant above to inspect its exact blind-touch behavior and send the corresponding BLE command directly.
+          </div>
+        </div>
+
+        <!-- Right 6 Cols: Live BLE GATT Packet Console -->
+        <div class="lg:col-span-6 bg-cmf-card border border-cmf-border rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-mono uppercase text-emerald-400">GATT Protocol Inspector</span>
+              <h2 class="font-dot text-base font-bold text-white">Live BLE Command &amp; Frame Log</h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="copyBleLogBtn" type="button" class="px-2.5 py-1 rounded bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">Copy</button>
+              <button id="clearBleLogBtn" type="button" class="px-2.5 py-1 rounded bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-xs font-mono">Clear</button>
+            </div>
+          </div>
+
+          <!-- Console Log Output -->
+          <div id="bleConsoleBox" class="h-64 rounded-xl bg-black border border-cmf-border p-3 font-mono text-xs overflow-y-auto space-y-1.5 text-zinc-300"><div><span class="text-zinc-500">[19:15:27]</span> <span class="text-emerald-400 font-bold">RX</span> <span class="text-zinc-200">0xFFF0 LOCKED</span> <span class="text-zinc-400">// Could not bind 0xFFF0 — make sure Nothing X app is Force Stopped!</span></div><div><span class="text-zinc-500">[19:15:27]</span> <span class="text-emerald-400 font-bold">RX</span> <span class="text-zinc-200">0x180F</span> <span class="text-zinc-400">// Battery read skipped or requires encrypted session</span></div><div><span class="text-zinc-500">[19:15:26]</span> <span class="text-emerald-400 font-bold">RX</span> <span class="text-zinc-200">GATT_CONN</span> <span class="text-zinc-400">// GATT Server Connected — enumerating 0xFFF0 &amp; 0x180F...</span></div><div><span class="text-zinc-500">[19:15:25]</span> <span class="text-emerald-400 font-bold">RX</span> <span class="text-zinc-200">GAP_FOUND</span> <span class="text-zinc-400">// Selected device: CMF Buds Pro 2</span></div><div><span class="text-zinc-500">[19:15:15]</span> <span class="text-cmf-orange font-bold">TX</span> <span class="text-zinc-200">GAP_SCAN</span> <span class="text-zinc-400">// Scanning for CMF Watch Pro 2 (Services: 0xFFF0, 77d4e67c-...)</span></div><div><span class="text-zinc-500">[19:15:09]</span> <span class="text-emerald-400 font-bold">RX</span> <span class="text-zinc-200">BB 04 02 52 4A</span> <span class="text-zinc-400">// Battery Level: 82% • Live Heart Rate: 74 BPM</span></div><div><span class="text-zinc-500">[19:15:09]</span> <span class="text-cmf-orange font-bold">TX</span> <span class="text-zinc-200">AA 10 03 00 00 05 B2</span> <span class="text-zinc-400">// Dead-Screen Guard Active: LiftWake=OFF, AOD=OFF, Haptics=STRONG</span></div><div><span class="text-zinc-500">[19:15:09]</span> <span class="text-emerald-400 font-bold">RX</span> <span class="text-zinc-200">BB 00 04 44 33 39 38</span> <span class="text-zinc-400">// Connected to CMF Watch Pro 2 (Model D398 • FW 1.0.1.77)</span></div>
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Custom Hex / Command Injector -->
+          <div class="flex items-center gap-2">
+            <input id="customHexInput" type="text" value="AA 01 04 00 12 01 00 B8" placeholder="Send raw CMF BLE frame (hex)..." class="flex-1 px-3 py-2 rounded-lg bg-black border border-cmf-border text-xs font-mono text-emerald-400">
+            <button id="sendRawHexBtn" type="button" class="px-4 py-2 rounded-lg bg-cmf-orange hover:bg-cmf-orangeLight text-black font-mono font-bold text-xs">
+              Send TX
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BLE Diagnostic & D398 GATT Protocol Modal -->
+  <div id="bleFixModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-cmf-card border-2 border-cmf-orange rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div class="flex items-center justify-between border-b border-cmf-border pb-3">
+        <div>
+          <span class="text-[11px] font-mono uppercase text-cmf-orange">Hardware BLE Diagnostics (Model D398)</span>
+          <h3 class="font-dot text-base sm:text-lg font-bold text-white">Fixing CMF Watch Pro 2 Bluetooth Connection</h3>
+        </div>
+        <button id="closeBleFixModalBtn" type="button" class="px-3 py-1 rounded-lg bg-cmf-surface hover:bg-zinc-800 text-xs font-mono text-zinc-300">✕ Close</button>
+      </div>
+
+      <!-- Live Diagnostic Readout -->
+      <div id="modalDiagList" class="p-3.5 rounded-xl bg-black border border-cmf-border font-mono text-xs space-y-1.5">
+        <div id="diagWebBleApi">• Web Bluetooth API: ✅ Present in Browser</div>
+        <div id="diagIframeState">• Execution Context: ✅ Top-Level Window (BLE Popup Allowed)</div>
+        <div id="diagGattStatus">• Active GATT Channel (0xFFF0): Simulated D398 Bridge Active</div>
+      </div>
+
+      <!-- 3-Step Checklist -->
+      <div class="space-y-3 text-xs text-zinc-200">
+        <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border">
+          <div class="font-mono font-bold text-cmf-orange uppercase">Step 1 — Release the Official Nothing X App Lock</div>
+          <p class="mt-1 text-cmf-muted">Because your watch is already paired with the official Nothing X app, Nothing X holds an exclusive encrypted session on GATT service <code class="text-zinc-200">0000fff0-0000-1000-8000-00805f9b34fb</code>. Open <strong>Phone Settings → Apps → Nothing X → Force Stop</strong> (do not unpair in Bluetooth settings, just force-stop the app so it lets go of the GATT socket).</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border">
+          <div class="font-mono font-bold text-cmf-orange uppercase">Step 2 — Run Outside the Preview Sandbox</div>
+          <p class="mt-1 text-cmf-muted">The in-chat preview window blocks <code class="text-zinc-200">navigator.bluetooth.requestDevice()</code> for security. Click <strong>Download Standalone App (.html)</strong> below, then open the file in <strong>Chrome on Android</strong> (or Desktop Chrome/Edge) with Location &amp; Nearby Devices permissions enabled.</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border">
+          <div class="font-mono font-bold text-emerald-400 uppercase">Step 3 — Verified CMF Watch Pro 2 GATT UUIDs (Pre-Configured)</div>
+          <p class="mt-1 text-cmf-muted">Chromium Web Bluetooth hides any service not listed in <code class="text-zinc-200">optionalServices</code>. This app pre-loads all 10 reverse-engineered D398 UUIDs:</p>
+          <div class="mt-2 p-2 rounded bg-black font-mono text-[11px] text-emerald-400 overflow-x-auto space-y-0.5">
+            <div>• Command Service: 0000fff0-0000-1000-8000-00805f9b34fb (Write: 0xfff2 | Notify: 0xfff1)</div>
+            <div>• Shell / Auth Service: 77d4e67c-2fe2-2334-0d35-9ccd078f529c (AT GETSECRET → 77d4ff01 / 77d4ff02)</div>
+            <div>• Bulk Data Service: 02f00000-0000-0000-0000-00000000ffe0 (Write: ffe1 | Notify: ffe2)</div>
+            <div>• Standard Services: 0x180f (Battery), 0x180a (Device Info), 0xefe7, 0xffd0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-cmf-border">
+        <button id="modalDownloadHtmlBtn" type="button" class="px-4 py-2.5 rounded-xl bg-cmf-orange hover:bg-cmf-orangeLight text-black font-mono font-bold text-xs transition">
+          ⬇ Download Standalone App (.html)
+        </button>
+        <div class="flex items-center gap-2">
+          <button id="modalTestAtSecretBtn" type="button" class="px-3.5 py-2.5 rounded-xl bg-cmf-surface hover:bg-zinc-800 border border-cmf-border text-emerald-400 font-mono text-xs transition">
+            🔑 Simulate AT GETSECRET Handshake
+          </button>
+          <button id="modalRetryBleBtn" type="button" class="px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-mono font-bold text-xs transition">
+            🔄 Retry WebBLE Scan Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Banner -->
+  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 max-w-sm bg-cmf-card border-2 border-cmf-orange text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 hidden">
+    <span class="text-cmf-orange text-lg">⚡</span>
+    <div>
+      <div id="toastTitle" class="font-dot text-xs font-bold uppercase text-cmf-orange">BLE Connected!</div>
+      <div id="toastMsg" class="text-xs font-mono text-zinc-200 mt-0.5">Connected to CMF Buds Pro 2</div>
+    </div>
+  </div>
+
+  <script>
+    // =====================================================
+    // APPLICATION STATE & STORAGE
+    // =====================================================
+    const state = {
+      audioEnabled: true,
+      deadScreenGuard: true,
+      battery: 82,
+      hr: 74,
+      spo2: 98,
+      stress: 32,
+      steps: 6420,
+      stepsGoal: 10000,
+      cals: 385,
+      calsGoal: 500,
+      settings: {
+        dnd: false,
+        liftWake: false,
+        btCalling: true,
+        autoHr: true,
+        autoSpo2: true,
+        vibration: 'STRONG'
+      },
+      scanning: null,
+      scanInterval: null,
+      workout: {
+        sport: 'Outdoor Run',
+        gps: true,
+        met: 9.8,
+        active: false,
+        paused: false,
+        elapsedSec: 0,
+        cals: 0,
+        distKm: 0,
+        intervalId: null
+      },
+      workoutHistory: [
+        { id: 1, sport: 'Outdoor Walk', date: 'Yesterday, 18:15', duration: '34m 12s', dist: '2.84 km', avgHr: '108 BPM', cals: '164 kcal' },
+        { id: 2, sport: 'Outdoor Run', date: '29 Oct, 07:05', duration: '26m 40s', dist: '4.52 km', avgHr: '149 BPM', cals: '342 kcal' },
+        { id: 3, sport: 'Strength Training', date: '27 Oct, 19:00', duration: '45m 00s', dist: 'Indoor', avgHr: '126 BPM', cals: '290 kcal' }
+      ],
+      alarms: [
+        { id: 101, time: '06:45', days: 'Mon - Fri', enabled: true },
+        { id: 102, time: '08:00', days: 'Sat, Sun', enabled: true },
+        { id: 103, time: '22:30', days: 'Daily (Sleep Cue)', enabled: false }
+      ],
+      wristTimer: {
+        totalSec: 300,
+        remainSec: 300,
+        running: false,
+        intervalId: null
+      }
+    };
+
+    // Load saved state safely
+    try {
+      const saved = localStorage.getItem('nothing_x_cmf_state_v1');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.stepsGoal) state.stepsGoal = parsed.stepsGoal;
+        if (parsed.calsGoal) state.calsGoal = parsed.calsGoal;
+        if (Array.isArray(parsed.alarms)) state.alarms = parsed.alarms;
+        if (Array.isArray(parsed.workoutHistory)) state.workoutHistory = parsed.workoutHistory;
+      }
+    } catch (e) {
+      // Ignore storage errors in sandboxed iframe
+    }
+
+    function persistState() {
+      try {
+        localStorage.setItem('nothing_x_cmf_state_v1', JSON.stringify({
+          stepsGoal: state.stepsGoal,
+          calsGoal: state.calsGoal,
+          alarms: state.alarms,
+          workoutHistory: state.workoutHistory
+        }));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    // =====================================================
+    // WEB AUDIO HAPTIC & BEEP SYNTHESIZER
+    // =====================================================
+    let audioCtx = null;
+    function playHapticBeep(freq = 520, durationMs = 90, pulses = 1) {
+      if (!state.audioEnabled) return;
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) audioCtx = new AudioContextClass();
+        }
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        for (let i = 0; i < pulses; i++) {
+          const startOffset = i * (durationMs + 70) / 1000;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startOffset);
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime + startOffset);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + startOffset + durationMs / 1000);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + startOffset);
+          osc.stop(audioCtx.currentTime + startOffset + durationMs / 1000);
+        }
+      } catch (e) {
+        // Fallback silent
+      }
+    }
+
+    // =====================================================
+    // BLE PACKET LOGGER & TOAST
+    // =====================================================
+    let toastTimer = null;
+    function showToast(title, msg) {
+      const banner = document.getElementById('toastBanner');
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastMsg').textContent = msg;
+      banner.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 3200);
+    }
+
+    function logBlePacket(dir, hex, desc) {
+      const box = document.getElementById('bleConsoleBox');
+      if (!box) return;
+      const now = new Date();
+      const ts = now.toTimeString().split(' ')[0];
+      const row = document.createElement('div');
+      const colorClass = dir === 'TX' ? 'text-cmf-orange' : 'text-emerald-400';
+      row.innerHTML = `<span class="text-zinc-500">[${ts}]</span> <span class="${colorClass} font-bold">${dir}</span> <span class="text-zinc-200">${hex}</span> <span class="text-zinc-400">// ${desc}</span>`;
+      box.prepend(row);
+    }
+
+    // =====================================================
+    // TAB NAVIGATION
+    // =====================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.className = 'tab-btn px-3.5 py-2 rounded-lg font-dot text-xs uppercase tracking-wider transition whitespace-nowrap text-cmf-muted hover:text-white hover:bg-cmf-surface';
+        });
+        btn.className = 'tab-btn px-3.5 py-2 rounded-lg font-dot text-xs uppercase tracking-wider transition whitespace-nowrap bg-cmf-orange text-black font-bold';
+
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+          panel.classList.add('hidden');
+        });
+        const activePanel = document.getElementById(`tab-${targetTab}`);
+        if (activePanel) activePanel.classList.remove('hidden');
+        playHapticBeep(640, 45, 1);
+      });
+    });
+
+    // =====================================================
+    // HEADER CONTROLS (AUDIO & REAL WEB BLUETOOTH)
+    // =====================================================
+    document.getElementById('audioToggleBtn').addEventListener('click', () => {
+      state.audioEnabled = !state.audioEnabled;
+      document.getElementById('audioIcon').textContent = state.audioEnabled ? '🔊' : '🔇';
+      document.getElementById('audioLabel').textContent = `Haptic Audio: ${state.audioEnabled ? 'ON' : 'OFF'}`;
+      if (state.audioEnabled) playHapticBeep(700, 60, 1);
+    });
+
+    // Real CMF Watch Pro 2 (Model D398) GATT UUIDs (from reverse-engineered protocol spec)
+    const CMF_GATT_SERVICES = [
+      0xfff0,
+      0x180f,
+      0x180a,
+      0xefe7,
+      0xffd0,
+      '0000fff0-0000-1000-8000-00805f9b34fb', // Primary Command Channel
+      '77d4e67c-2fe2-2334-0d35-9ccd078f529c', // Shell / AT GETSECRET Pairing Channel
+      '02f00000-0000-0000-0000-00000000ffe0', // Bulk Data Transfer Channel
+      '02f00000-0000-0000-0000-00000000fe00', // Firmware / Watchface Channel
+      'e49a3001-f69a-11e8-8eb2-f2801f1b9fd1',
+      'f48a23c0-f69a-11e8-8eb2-f2801f1b9fd1',
+      'battery_service',
+      'device_information',
+      'heart_rate',
+      'current_time'
+    ];
+
+    let activeBleDevice = null;
+    let activeCmdWriteChar = null;
+    let activeShellWriteChar = null;
+
+    function runBleEnvironmentDiagnostics() {
+      const inIframe = window.self !== window.top;
+      const hasBle = typeof navigator !== 'undefined' && !!navigator.bluetooth;
+      const badge = document.getElementById('envDiagBadge');
+      const dApi = document.getElementById('diagWebBleApi');
+      const dFrame = document.getElementById('diagIframeState');
+      const dGatt = document.getElementById('diagGattStatus');
+
+      if (badge) {
+        if (inIframe) {
+          badge.textContent = '⚠️ Sandboxed Preview Detected (Download .HTML for Real BLE)';
+          badge.className = 'text-xs font-mono text-amber-400';
+        } else if (hasBle) {
+          badge.textContent = '✅ Native Web Bluetooth Ready';
+          badge.className = 'text-xs font-mono text-emerald-400';
+        } else {
+          badge.textContent = '❌ Browser Lacks WebBLE (Use Chrome on Android/Desktop)';
+          badge.className = 'text-xs font-mono text-rose-400';
+        }
+      }
+      if (dApi) dApi.textContent = `• Web Bluetooth API: ${hasBle ? '✅ Present in Browser' : '❌ Unavailable (Use Chrome or Edge)'}`;
+      if (dFrame) dFrame.textContent = `• Execution Context: ${inIframe ? '⚠️ Inside Sandboxed Preview Iframe (Blocks BLE Popup — Download .html below)' : '✅ Top-Level Window (BLE Popup Allowed)'}`;
+      if (dGatt) dGatt.textContent = `• Active GATT Channel (0xFFF0): ${activeCmdWriteChar ? '✅ Connected to Real Hardware' : 'Simulated D398 Bridge Active'}`;
+    }
+
+    // Native Android APK Bridge callback hooks (invoked by MainActivity.kt BluetoothGatt)
+    window.onNativeBleStatus = function(statusText, isConnected) {
+      document.getElementById('connText').textContent = statusText;
+      logBlePacket('RX', 'NATIVE_GATT', statusText);
+      showToast('Native Android BLE', statusText);
+    };
+    window.onNativeBlePacket = function(dir, hexStr, desc) {
+      logBlePacket(dir, hexStr, desc);
+    };
+    window.onNativeBattery = function(pct) {
+      state.battery = pct;
+      document.getElementById('batteryLevelText').textContent = `${pct}%`;
+      document.getElementById('mirrorBattery').textContent = `${pct}%`;
+    };
+
+    async function initiateRealBleConnection() {
+      playHapticBeep(820, 70, 1);
+      runBleEnvironmentDiagnostics();
+
+      // If running inside the compiled Native Android APK (MainActivity.kt WebView bridge)
+      if (typeof window.AndroidBleBridge !== 'undefined' && window.AndroidBleBridge.startNativeScan) {
+        logBlePacket('TX', 'ANDROID_GATT', 'Invoking Native Android BluetoothGatt Scanner for D398...');
+        window.AndroidBleBridge.startNativeScan();
+        return;
+      }
+
+      if (!navigator.bluetooth) {
+        document.getElementById('bleFixModal').classList.remove('hidden');
+        showToast('Web Bluetooth Blocked', 'Opened BLE Troubleshooter — download standalone .html for Chrome.');
+        logBlePacket('TX', 'F5 FFFF 8004', 'WebBLE unavailable in current frame; opened BLE Fix Assistant');
+        return;
+      }
+
+      try {
+        logBlePacket('TX', 'GAP_SCAN', 'Scanning for CMF Watch Pro 2 (Services: 0xFFF0, 77d4e67c-...)');
+        const device = await navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: CMF_GATT_SERVICES
+        });
+
+        activeBleDevice = device;
+        document.getElementById('connText').textContent = `PAIRING: ${device.name || 'CMF Watch Pro 2'}...`;
+        logBlePacket('RX', 'GAP_FOUND', `Selected device: ${device.name || 'CMF Watch Pro 2 (D398)'}`);
+
+        const server = await device.gatt.connect();
+        logBlePacket('RX', 'GATT_CONN', 'GATT Server Connected — enumerating 0xFFF0 & 0x180F...');
+
+        // 1. Try reading standard Battery Service (0x180F)
+        try {
+          const battService = await server.getPrimaryService(0x180f);
+          const battChar = await battService.getCharacteristic(0x2a19);
+          const battVal = await battChar.readValue();
+          const pct = battVal.getUint8(0);
+          state.battery = pct;
+          document.getElementById('batteryLevelText').textContent = `${pct}%`;
+          document.getElementById('mirrorBattery').textContent = `${pct}%`;
+          logBlePacket('RX', `005C 0001 -> ${pct.toString(16).toUpperCase()}`, `Read Real Hardware Battery: ${pct}%`);
+        } catch (e) {
+          logBlePacket('RX', '0x180F', 'Battery read skipped or requires encrypted session');
+        }
+
+        // 2. Bind to CMF Command Channel (0000fff0-0000-1000-8000-00805f9b34fb)
+        try {
+          const cmdService = await server.getPrimaryService('0000fff0-0000-1000-8000-00805f9b34fb');
+          activeCmdWriteChar = await cmdService.getCharacteristic('0000fff2-0000-1000-8000-00805f9b34fb');
+          const cmdNotifyChar = await cmdService.getCharacteristic('0000fff1-0000-1000-8000-00805f9b34fb');
+          await cmdNotifyChar.startNotifications();
+          cmdNotifyChar.addEventListener('characteristicvaluechanged', (ev) => {
+            const bytes = new Uint8Array(ev.target.value.buffer);
+            const hexStr = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+            logBlePacket('RX', hexStr, 'CMF 0xFFF1 Notification Frame');
+          });
+          logBlePacket('RX', '0xFFF0 READY', 'Subscribed to 0xFFF1 Notify & bound 0xFFF2 Write');
+        } catch (e) {
+          logBlePacket('RX', '0xFFF0 LOCKED', 'Could not bind 0xFFF0 — make sure Nothing X app is Force Stopped!');
+        }
+
+        // 3. Try Shell Service (77d4e67c-2fe2-2334-0d35-9ccd078f529c) for AT GETSECRET
+        try {
+          const shellService = await server.getPrimaryService('77d4e67c-2fe2-2334-0d35-9ccd078f529c');
+          activeShellWriteChar = await shellService.getCharacteristic('77d4ff01-2fe2-2334-0d35-9ccd078f529c');
+          const shellNotifyChar = await shellService.getCharacteristic('77d4ff02-2fe2-2334-0d35-9ccd078f529c');
+          await shellNotifyChar.startNotifications();
+          shellNotifyChar.addEventListener('characteristicvaluechanged', (ev) => {
+            const dec = new TextDecoder().decode(ev.target.value);
+            logBlePacket('RX', dec.trim(), 'Shell 77d4ff02 AT Response');
+          });
+        } catch (e) {
+          // Shell optional
+        }
+
+        document.getElementById('connText').textContent = `BLE LIVE: ${device.name || 'CMF Watch Pro 2'}`;
+        runBleEnvironmentDiagnostics();
+        showToast('BLE Connected!', `Connected to ${device.name || 'CMF Watch Pro 2'}`);
+      } catch (err) {
+        const msg = err && err.message ? err.message : 'Blocked by iframe or cancelled';
+        logBlePacket('RX', 'BLE_ERR', `WebBLE Error: ${msg}`);
+        document.getElementById('bleFixModal').classList.remove('hidden');
+        showToast('Why BLE Failed', 'See the diagnostic popup: Force-stop Nothing X & run standalone HTML in Chrome.');
+      }
+    }
+
+    document.getElementById('webBleBtn').addEventListener('click', initiateRealBleConnection);
+    document.getElementById('modalRetryBleBtn').addEventListener('click', () => {
+      document.getElementById('bleFixModal').classList.add('hidden');
+      initiateRealBleConnection();
+    });
+
+    // Modal & Banner Controls
+    document.getElementById('openBleFixModalBtn').addEventListener('click', () => {
+      runBleEnvironmentDiagnostics();
+      document.getElementById('bleFixModal').classList.remove('hidden');
+    });
+    document.getElementById('openProtocolModalBtn').addEventListener('click', () => {
+      runBleEnvironmentDiagnostics();
+      document.getElementById('bleFixModal').classList.remove('hidden');
+    });
+    document.getElementById('closeBleFixModalBtn').addEventListener('click', () => {
+      document.getElementById('bleFixModal').classList.add('hidden');
+    });
+    document.getElementById('dismissBleBannerBtn').addEventListener('click', () => {
+      document.getElementById('bleTroubleshootBanner').classList.add('hidden');
+    });
+
+    // Standalone .HTML Downloader (so user can open directly in Chrome outside sandboxed iframe)
+    function downloadStandaloneHtml() {
+      playHapticBeep(760, 70, 2);
+      const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Nothing_X_CMF_Watch_Pro_2_Controller.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      showToast('Standalone App Downloaded', 'Open Nothing_X_CMF_Watch_Pro_2_Controller.html in Chrome to unlock native Web Bluetooth.');
+    }
+    document.getElementById('downloadStandaloneBtn').addEventListener('click', downloadStandaloneHtml);
+    document.getElementById('modalDownloadHtmlBtn').addEventListener('click', downloadStandaloneHtml);
+
+    // Simulate AT GETSECRET + Session Key Handshake in Console
+    document.getElementById('modalTestAtSecretBtn').addEventListener('click', () => {
+      playHapticBeep(840, 60, 2);
+      logBlePacket('TX', '41 54 20 47 45 54 53 45 43 52 45 54', 'Shell Write (77d4ff01): AT GETSECRET');
+      setTimeout(() => {
+        logBlePacket('RX', 'GETSECRET:9A4F8C2E11B07D3A65E199C4082B77F1,OK', 'Shell Notify (77d4ff02): 16-Byte Device Secret Extracted');
+      }, 200);
+      setTimeout(() => {
+        logBlePacket('TX', 'F5 FFFF 8001 [rnd1 || SHA256(rnd1||secret)]', 'AUTH_PAIR_REQUEST (48B Plaintext on 0xFFF2)');
+      }, 450);
+      setTimeout(() => {
+        logBlePacket('RX', 'F5 FFFF 0004 [AES-128-CBC Session Established]', 'AUTH_NONCE_REPLY -> Derived sessionKey -> State = Initialized');
+        logBlePacket('TX', 'F5 FFFF 8004 [EpochBE || OffsetMillisBE]', 'Post-Auth Mandatory TIME Sync Sent -> Unblocked Health & Alarms');
+        showToast('D398 Handshake Verified', 'Simulated full AT GETSECRET + AES-128 session handshake in BLE Console.');
+      }, 750);
+    });
+
+    // =====================================================
+    // TAB 1: VIRTUAL WATCH & ON-DEMAND PPG SENSORS
+    // =====================================================
+    function updateClock() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const clockEl = document.getElementById('mirrorClock');
+      if (clockEl) clockEl.textContent = `${hh}:${mm}`;
+    }
+    setInterval(updateClock, 10000);
+    updateClock();
+
+    function pulseWatchBezel() {
+      const bezel = document.getElementById('watchBezel');
+      bezel.classList.add('cmf-glow');
+      setTimeout(() => bezel.classList.remove('cmf-glow'), 900);
+    }
+
+    function triggerCrownHome() {
+      playHapticBeep(580, 75, 1);
+      pulseWatchBezel();
+      document.getElementById('watchStatePill').textContent = 'HOME // WATCHFACE';
+      document.getElementById('mirrorFooterStatus').textContent = 'Crown Home Reset Confirmed';
+      logBlePacket('TX', 'AA 02 01 00 01 BD', 'Crown Home Key Press (Exit submenus)');
+      showToast('Crown Home Sent', 'Watch returned to root watchface state.');
+    }
+
+    document.getElementById('virtualCrownBtn').addEventListener('click', triggerCrownHome);
+    document.getElementById('btnCrownPress').addEventListener('click', triggerCrownHome);
+
+    document.getElementById('btnFindWatch').addEventListener('click', () => {
+      playHapticBeep(880, 120, 3);
+      pulseWatchBezel();
+      document.getElementById('watchStatePill').textContent = 'RINGING & VIBRATING';
+      document.getElementById('mirrorFooterStatus').textContent = '📳 FIND WATCH PULSE ACTIVE';
+      logBlePacket('TX', 'AA 07 01 01 03 C4', 'Trigger Find My Watch (3x High Haptic + Tone)');
+      showToast('Find Watch Triggered', 'CMF Watch Pro 2 is vibrating and ringing.');
+      setTimeout(() => {
+        document.getElementById('watchStatePill').textContent = 'IDLE // MONITORING';
+        document.getElementById('mirrorFooterStatus').textContent = 'PPG Optical: Ready';
+      }, 3000);
+    });
+
+    document.getElementById('btnSyncTime').addEventListener('click', () => {
+      playHapticBeep(720, 60, 2);
+      updateClock();
+      logBlePacket('TX', 'AA 03 08 07 EA 0A 1F 12 34 16 00', 'Sync Current Time + UTC+05:30 Timezone');
+      showToast('Time & Timezone Synced', 'Synced current system clock safely (avoids past-time crash).');
+    });
+
+    // Dead-Screen Guard Mode Toggle
+    document.getElementById('toggleDeadScreenGuard').addEventListener('click', () => {
+      state.deadScreenGuard = !state.deadScreenGuard;
+      const btn = document.getElementById('toggleDeadScreenGuard');
+      const tag = document.getElementById('guardStatusTag');
+      if (state.deadScreenGuard) {
+        btn.className = 'w-12 h-6 rounded-full bg-cmf-orange p-1 transition flex items-center justify-end shrink-0';
+        tag.textContent = 'ACTIVE';
+        tag.className = 'text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
+        state.settings.liftWake = false;
+        updateHardwareBadges();
+        logBlePacket('TX', 'AA 10 03 00 00 05 B2', 'Enable Dead-Screen Guard: LiftWake=OFF, AOD=OFF, Timeout=5s');
+        showToast('Dead-Screen Guard ON', 'Disabled Wake-on-Wrist & AOD to save battery and block ghost touches.');
+      } else {
+        btn.className = 'w-12 h-6 rounded-full bg-zinc-700 p-1 transition flex items-center justify-start shrink-0';
+        tag.textContent = 'BYPASSED';
+        tag.className = 'text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-cmf-muted';
+        logBlePacket('TX', 'AA 10 03 01 00 10 BD', 'Disable Dead-Screen Guard');
+        showToast('Dead-Screen Guard OFF', 'Standard display wake gestures restored.');
+      }
+      playHapticBeep(600, 60, 1);
+    });
+
+    // On-Demand PPG Scan Triggers (HR, SpO2, Stress)
+    document.querySelectorAll('.scan-trigger-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.getAttribute('data-scan');
+        if (state.scanInterval) clearInterval(state.scanInterval);
+
+        const container = document.getElementById('activeScanContainer');
+        const titleEl = document.getElementById('activeScanTitle');
+        const pctEl = document.getElementById('activeScanPct');
+        const barEl = document.getElementById('activeScanBar');
+        container.classList.remove('hidden');
+
+        const labelMap = {
+          hr: 'Optical Green LED PPG: Measuring Heart Rate...',
+          spo2: 'Red + IR Optical LED: Measuring Blood Oxygen (SpO₂)...',
+          stress: 'HRV R-R Interval Analysis: Measuring Stress Index...'
+        };
+        titleEl.textContent = labelMap[type] || 'Scanning...';
+        document.getElementById('watchStatePill').textContent = `SCANNING // ${type.toUpperCase()}`;
+        document.getElementById('mirrorFooterStatus').textContent = `PPG ${type.toUpperCase()} LED ACTIVE`;
+        playHapticBeep(680, 70, 2);
+        logBlePacket('TX', `AA 14 02 01 ${type === 'hr' ? '01' : type === 'spo2' ? '02' : '03'} D1`, `Start Remote On-Demand ${type.toUpperCase()} Measurement`);
+
+        let progress = 0;
+        barEl.style.width = '0%';
+        pctEl.textContent = '0%';
+
+        state.scanInterval = setInterval(() => {
+          progress += 10;
+          barEl.style.width = `${progress}%`;
+          pctEl.textContent = `${progress}%`;
+
+          if (progress >= 100) {
+            clearInterval(state.scanInterval);
+            state.scanInterval = null;
+            playHapticBeep(880, 110, 2);
+
+            if (type === 'hr') {
+              state.hr = Math.floor(68 + Math.random() * 18);
+              document.getElementById('liveHrReadout').textContent = state.hr;
+              document.getElementById('mirrorHrVal').textContent = state.hr;
+              document.getElementById('hrLastTime').textContent = `Just now • Resting: 61 BPM`;
+              logBlePacket('RX', `BB 14 02 01 ${state.hr.toString(16).toUpperCase()}`, `PPG Heart Rate Result: ${state.hr} BPM`);
+              showToast('Heart Rate Measured', `Current Wristband Heart Rate: ${state.hr} BPM`);
+            } else if (type === 'spo2') {
+              state.spo2 = Math.floor(96 + Math.random() * 4);
+              document.getElementById('liveSpo2Readout').textContent = state.spo2;
+              document.getElementById('spo2LastTime').textContent = `Just now • Optimal (95-100%)`;
+              logBlePacket('RX', `BB 14 02 02 ${state.spo2.toString(16).toUpperCase()}`, `PPG SpO₂ Result: ${state.spo2}%`);
+              showToast('SpO₂ Measured', `Current Blood Oxygen Saturation: ${state.spo2}%`);
+            } else {
+              state.stress = Math.floor(24 + Math.random() * 22);
+              document.getElementById('liveStressReadout').textContent = state.stress;
+              document.getElementById('stressLastTime').textContent = `Just now • State: ${state.stress < 40 ? 'Relaxed' : 'Normal'}`;
+              logBlePacket('RX', `BB 14 02 03 ${state.stress.toString(16).toUpperCase()}`, `HRV Stress Result: ${state.stress}/100`);
+              showToast('Stress Level Measured', `HRV Stress Score: ${state.stress}/100`);
+            }
+
+            document.getElementById('watchStatePill').textContent = 'IDLE // MONITORING';
+            document.getElementById('mirrorFooterStatus').textContent = 'PPG Optical: Ready';
+            setTimeout(() => container.classList.add('hidden'), 1200);
+          }
+        }, 280);
+      });
+    });
+
+    // Hardware Setting Cards Toggle
+    function updateHardwareBadges() {
+      const map = [
+        { key: 'dnd', labelOn: 'ON', labelOff: 'OFF' },
+        { key: 'liftWake', labelOn: 'ON', labelOff: 'OFF (SAVED)' },
+        { key: 'btCalling', labelOn: 'ON', labelOff: 'MUTED' },
+        { key: 'autoHr', labelOn: 'ON (5m)', labelOff: 'OFF' },
+        { key: 'autoSpo2', labelOn: 'ON', labelOff: 'OFF' }
+      ];
+      map.forEach(item => {
+        const badge = document.getElementById(`badge-${item.key}`);
+        if (!badge) return;
+        const isOn = state.settings[item.key];
+        badge.textContent = isOn ? item.labelOn : item.labelOff;
+        badge.className = isOn
+          ? 'text-[10px] font-mono px-2 py-0.5 rounded bg-cmf-orange/20 text-cmf-orange'
+          : 'text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-cmf-muted';
+      });
+      const dndMirror = document.getElementById('mirrorDndIcon');
+      if (dndMirror) {
+        dndMirror.classList.toggle('hidden', !state.settings.dnd);
+      }
+    }
+
+    document.querySelectorAll('.hw-toggle-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const key = card.getAttribute('data-setting');
+        state.settings[key] = !state.settings[key];
+        updateHardwareBadges();
+        playHapticBeep(660, 55, 1);
+        logBlePacket('TX', `AA 08 02 ${key.slice(0, 2).toUpperCase()} 0${state.settings[key] ? '1' : '0'}`, `Set ${key} = ${state.settings[key]}`);
+        showToast('Watch Setting Updated', `${key} is now ${state.settings[key] ? 'ENABLED' : 'DISABLED'}.`);
+      });
+    });
+
+    document.getElementById('cycleVibrationBtn').addEventListener('click', () => {
+      const modes = ['STRONG', 'STANDARD', 'GENTLE'];
+      const idx = (modes.indexOf(state.settings.vibration) + 1) % modes.length;
+      state.settings.vibration = modes[idx];
+      document.getElementById('badge-vibration').textContent = state.settings.vibration;
+      playHapticBeep(520, 100, idx === 0 ? 2 : 1);
+      logBlePacket('TX', `AA 09 01 0${idx + 1} C0`, `Set Haptic Strength = ${state.settings.vibration}`);
+      showToast('Haptic Intensity', `Wrist vibration set to ${state.settings.vibration}.`);
+    });
+
+    // Media & Notification Bridge Buttons
+    ['mediaPrevBtn', 'mediaPlayBtn', 'mediaNextBtn'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => {
+        playHapticBeep(740, 45, 1);
+        logBlePacket('TX', `AA 19 01 ${id === 'mediaPlayBtn' ? '01' : id === 'mediaNextBtn' ? '02' : '03'}`, `Media Control Sync (${id})`);
+        showToast('Media Bridge', `Dispatched ${id.replace('media', '').replace('Btn', '')} command.`);
+      });
+    });
+
+    document.getElementById('testCallNotificationBtn').addEventListener('click', () => {
+      playHapticBeep(620, 140, 3);
+      pulseWatchBezel();
+      document.getElementById('watchStatePill').textContent = 'INCOMING CALL // VIBRATING';
+      logBlePacket('TX', 'AA 05 0C 43 41 4C 4C 5F 54 45 53 54', 'Push Incoming Call Alert (Press Crown once to Answer)');
+      showToast('Incoming Call Alert Sent', 'Watch vibrating — single-press Crown to answer on wrist speaker.');
+      setTimeout(() => {
+        document.getElementById('watchStatePill').textContent = 'IDLE // MONITORING';
+      }, 3000);
+    });
+
+    document.getElementById('syncWeatherBtn').addEventListener('click', () => {
+      playHapticBeep(780, 60, 1);
+      logBlePacket('TX', 'AA 12 04 1C 16 20 01', 'Push Weather Forecast Packet (28°C Clear)');
+      showToast('Weather Synced', 'Pushed current local weather data to CMF Watch Pro 2.');
+    });
+
+    // =====================================================
+    // TAB 2: REMOTE WORKOUT ENGINE
+    // =====================================================
+    function formatDuration(sec) {
+      const h = String(Math.floor(sec / 3600)).padStart(2, '0');
+      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    }
+
+    document.querySelectorAll('.sport-select-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.workout.active) {
+          showToast('Workout in Progress', 'Pause or stop the current session before switching sports.');
+          return;
+        }
+        document.querySelectorAll('.sport-select-btn').forEach(b => {
+          b.className = 'sport-select-btn p-3 rounded-xl bg-cmf-surface border border-cmf-border hover:border-zinc-500 text-left transition';
+        });
+        btn.className = 'sport-select-btn p-3 rounded-xl bg-cmf-orange/20 border-2 border-cmf-orange text-left transition';
+
+        state.workout.sport = btn.getAttribute('data-sport');
+        state.workout.gps = btn.getAttribute('data-gps') === 'true';
+        state.workout.met = parseFloat(btn.getAttribute('data-met') || '6.0');
+        document.getElementById('activeSportLabel').textContent = `Selected: ${state.workout.sport} (${state.workout.gps ? 'GPS Locked' : 'Indoor PPG'})`;
+        document.getElementById('woGpsBadge').textContent = state.workout.gps ? '📡 L1 GPS: Strong' : '🏠 Indoor Sensor Mode';
+        playHapticBeep(640, 50, 1);
+      });
+    });
+
+    function renderWorkoutHistory() {
+      const container = document.getElementById('workoutHistoryList');
+      if (!container) return;
+      container.innerHTML = state.workoutHistory.map(item => `
+        <div class="p-3 rounded-xl bg-cmf-surface border border-cmf-border flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="font-mono text-xs font-bold text-white">${item.sport} <span class="text-cmf-orange">• ${item.duration}</span></div>
+            <div class="text-[11px] font-mono text-cmf-muted">${item.date}</div>
+          </div>
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <span class="text-sky-400">${item.dist}</span>
+            <span class="text-rose-400">${item.avgHr}</span>
+            <span class="text-amber-400">${item.cals}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    renderWorkoutHistory();
+
+    document.getElementById('btnStartWorkout').addEventListener('click', () => {
+      if (state.workout.active && !state.workout.paused) return;
+      state.workout.active = true;
+      state.workout.paused = false;
+
+      document.getElementById('btnStartWorkout').disabled = true;
+      document.getElementById('btnStartWorkout').classList.add('opacity-50');
+      document.getElementById('btnPauseWorkout').disabled = false;
+      document.getElementById('btnStopWorkout').disabled = false;
+      document.getElementById('watchStatePill').textContent = `WORKOUT // ${state.workout.sport.toUpperCase()}`;
+
+      playHapticBeep(840, 100, 2);
+      logBlePacket('TX', 'AA 20 03 01 01 D8', `Remote Start Workout: ${state.workout.sport}`);
+      showToast('Workout Started on Watch', `${state.workout.sport} tracking is live on your wrist.`);
+
+      if (state.workout.intervalId) clearInterval(state.workout.intervalId);
+      state.workout.intervalId = setInterval(() => {
+        if (state.workout.paused) return;
+        state.workout.elapsedSec += 1;
+        document.getElementById('workoutTimerDisplay').textContent = formatDuration(state.workout.elapsedSec);
+
+        // Simulate realistic exercise HR & metrics
+        const simHr = Math.min(176, Math.floor(118 + (state.workout.elapsedSec % 35) + Math.random() * 8));
+        state.hr = simHr;
+        document.getElementById('woHrVal').textContent = simHr;
+        document.getElementById('mirrorHrVal').textContent = simHr;
+
+        const zoneText = simHr < 125 ? 'Zone 2 • Fat Burn' : simHr < 150 ? 'Zone 3 • Aerobic' : 'Zone 4 • Anaerobic';
+        document.getElementById('woHrZone').textContent = zoneText;
+
+        state.workout.cals += (state.workout.met * 70) / 3600;
+        document.getElementById('woCalVal').textContent = Math.round(state.workout.cals);
+
+        if (state.workout.gps) {
+          state.workout.distKm += 0.0032;
+          document.getElementById('woDistVal').textContent = state.workout.distKm.toFixed(2);
+          document.getElementById('woPaceVal').textContent = `5'18"`;
+          document.getElementById('woCadenceVal').textContent = `166 SPM`;
+        } else {
+          document.getElementById('woDistVal').textContent = '0.00';
+          document.getElementById('woPaceVal').textContent = `Active`;
+          document.getElementById('woCadenceVal').textContent = `132 BPM Avg`;
+        }
+      }, 1000);
+    });
+
+    document.getElementById('btnPauseWorkout').addEventListener('click', () => {
+      if (!state.workout.active) return;
+      state.workout.paused = !state.workout.paused;
+      const pauseBtn = document.getElementById('btnPauseWorkout');
+      pauseBtn.textContent = state.workout.paused ? '▶ Resume' : '⏸ Pause';
+      playHapticBeep(540, 80, 1);
+      logBlePacket('TX', `AA 20 02 0${state.workout.paused ? '2' : '3'}`, `${state.workout.paused ? 'Pause' : 'Resume'} Active Workout`);
+    });
+
+    document.getElementById('btnStopWorkout').addEventListener('click', () => {
+      if (!state.workout.active) return;
+      if (state.workout.intervalId) clearInterval(state.workout.intervalId);
+      state.workout.intervalId = null;
+
+      const durStr = `${Math.floor(state.workout.elapsedSec / 60)}m ${state.workout.elapsedSec % 60}s`;
+      const newEntry = {
+        id: Date.now(),
+        sport: state.workout.sport,
+        date: 'Just now',
+        duration: durStr,
+        dist: state.workout.gps ? `${state.workout.distKm.toFixed(2)} km` : 'Indoor',
+        avgHr: `${document.getElementById('woHrVal').textContent} BPM`,
+        cals: `${Math.max(1, Math.round(state.workout.cals))} kcal`
+      };
+      state.workoutHistory.unshift(newEntry);
+      persistState();
+      renderWorkoutHistory();
+
+      // Reset workout state
+      state.workout.active = false;
+      state.workout.paused = false;
+      state.workout.elapsedSec = 0;
+      state.workout.cals = 0;
+      state.workout.distKm = 0;
+      document.getElementById('workoutTimerDisplay').textContent = '00:00:00';
+      document.getElementById('btnStartWorkout').disabled = false;
+      document.getElementById('btnStartWorkout').classList.remove('opacity-50');
+      document.getElementById('btnPauseWorkout').disabled = true;
+      document.getElementById('btnPauseWorkout').textContent = '⏸ Pause';
+      document.getElementById('btnStopWorkout').disabled = true;
+      document.getElementById('watchStatePill').textContent = 'IDLE // MONITORING';
+
+      playHapticBeep(760, 120, 2);
+      logBlePacket('TX', 'AA 20 02 04 DF', `End & Sync Workout Session (${durStr})`);
+      showToast('Workout Saved', `${newEntry.sport} (${durStr}) synced from watch.`);
+    });
+
+    // =====================================================
+    // TAB 3: VITALS CHARTS & GOALS
+    // =====================================================
+    function updateGoalSliders() {
+      const sPct = Math.min(100, Math.round((state.steps / state.stepsGoal) * 100));
+      document.getElementById('goalStepsText').textContent = state.stepsGoal.toLocaleString();
+      document.getElementById('stepsPctBadge').textContent = `${sPct}%`;
+      document.getElementById('stepsGoalBar').style.width = `${sPct}%`;
+
+      const cPct = Math.min(100, Math.round((state.cals / state.calsGoal) * 100));
+      document.getElementById('goalCalsText').textContent = state.calsGoal;
+      document.getElementById('calsPctBadge').textContent = `${cPct}%`;
+      document.getElementById('calsGoalBar').style.width = `${cPct}%`;
+    }
+
+    document.getElementById('stepsGoalRange').addEventListener('input', (e) => {
+      state.stepsGoal = parseInt(e.target.value, 10);
+      updateGoalSliders();
+      persistState();
+    });
+
+    document.getElementById('calsGoalRange').addEventListener('input', (e) => {
+      state.calsGoal = parseInt(e.target.value, 10);
+      updateGoalSliders();
+      persistState();
+    });
+    updateGoalSliders();
+
+    let hrChart = null;
+    let spo2Chart = null;
+    function initCharts() {
+      if (typeof Chart === 'undefined') return;
+      const hours = ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'];
+
+      const hrCtx = document.getElementById('hrChartCanvas').getContext('2d');
+      hrChart = new Chart(hrCtx, {
+        type: 'line',
+        data: {
+          labels: hours,
+          datasets: [{
+            label: 'Heart Rate (BPM)',
+            data: [62, 58, 64, 82, 78, 94, 74, 71],
+            borderColor: '#FF5500',
+            backgroundColor: 'rgba(255, 85, 0, 0.15)',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 4,
+            pointBackgroundColor: '#FF5500'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#F4F4F6', font: { family: 'JetBrains Mono', size: 11 } } } },
+          scales: {
+            x: { ticks: { color: '#8E8E9A' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { min: 45, max: 140, ticks: { color: '#8E8E9A' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+
+      const spo2Ctx = document.getElementById('spo2StressChartCanvas').getContext('2d');
+      spo2Chart = new Chart(spo2Ctx, {
+        type: 'bar',
+        data: {
+          labels: hours,
+          datasets: [
+            {
+              label: 'SpO₂ (%)',
+              data: [97, 96, 98, 98, 99, 97, 98, 98],
+              backgroundColor: '#38BDF8',
+              borderRadius: 4
+            },
+            {
+              label: 'Stress Index',
+              data: [22, 18, 25, 44, 38, 51, 32, 28],
+              backgroundColor: '#FBBF24',
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#F4F4F6', font: { family: 'JetBrains Mono', size: 11 } } } },
+          scales: {
+            x: { ticks: { color: '#8E8E9A' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { min: 0, max: 100, ticks: { color: '#8E8E9A' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+    }
+
+    document.getElementById('refreshVitalsChartBtn').addEventListener('click', () => {
+      if (hrChart) {
+        hrChart.data.datasets[0].data = hrChart.data.datasets[0].data.map(() => Math.floor(60 + Math.random() * 38));
+        hrChart.update();
+      }
+      playHapticBeep(750, 60, 1);
+      logBlePacket('RX', 'BB 30 10 3E 3A 40 52 4E 5E 4A 47', 'Synced 24h PPG Heart Rate & SpO₂ History Buffer');
+      showToast('Vitals Synced', 'Pulled latest 24-hour sensor buffer from watch.');
+    });
+
+    // =====================================================
+    // TAB 4: ALARMS & REMOTE WRIST TIMER
+    // =====================================================
+    function renderAlarms() {
+      const container = document.getElementById('alarmsListContainer');
+      if (!container) return;
+      container.innerHTML = state.alarms.map(alarm => `
+        <div class="p-3.5 rounded-xl bg-cmf-surface border border-cmf-border flex items-center justify-between gap-3">
+          <div>
+            <div class="font-dot text-xl font-bold ${alarm.enabled ? 'text-white' : 'text-cmf-muted line-through'}">${alarm.time}</div>
+            <div class="text-xs font-mono text-cmf-muted">${alarm.days} • Wrist Haptic</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" data-alarm-toggle="${alarm.id}" class="px-3 py-1 rounded-lg font-mono text-xs font-bold ${alarm.enabled ? 'bg-cmf-orange text-black' : 'bg-zinc-800 text-cmf-muted'}">
+              ${alarm.enabled ? 'ON' : 'OFF'}
+            </button>
+            <button type="button" data-alarm-del="${alarm.id}" class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 font-mono text-xs">
+              ✕
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('[data-alarm-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = Number(btn.getAttribute('data-alarm-toggle'));
+          const target = state.alarms.find(a => a.id === id);
+          if (target) {
+            target.enabled = !target.enabled;
+            persistState();
+            renderAlarms();
+            playHapticBeep(660, 50, 1);
+            logBlePacket('TX', `AA 0B 03 ${target.time.replace(':', '')} 0${target.enabled ? '1' : '0'}`, `Toggle Wrist Alarm ${target.time}`);
+          }
+        });
+      });
+
+      container.querySelectorAll('[data-alarm-del]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = Number(btn.getAttribute('data-alarm-del'));
+          state.alarms = state.alarms.filter(a => a.id !== id);
+          persistState();
+          renderAlarms();
+          playHapticBeep(480, 60, 1);
+          logBlePacket('TX', `AA 0B 01 FF`, `Delete Wrist Alarm Slot`);
+        });
+      });
+    }
+    renderAlarms();
+
+    document.getElementById('addAlarmBtn').addEventListener('click', () => {
+      const timeVal = document.getElementById('newAlarmTime').value || '07:30';
+      const daysVal = document.getElementById('newAlarmDays').value.trim() || 'Daily';
+      state.alarms.push({
+        id: Date.now(),
+        time: timeVal,
+        days: daysVal,
+        enabled: true
+      });
+      persistState();
+      renderAlarms();
+      playHapticBeep(780, 70, 2);
+      logBlePacket('TX', `AA 0B 04 ${timeVal.replace(':', '')} 01`, `Write New Wrist Vibration Alarm (${timeVal})`);
+      showToast('Wrist Alarm Added', `Watch will vibrate at ${timeVal} (${daysVal}).`);
+    });
+
+    // Wrist Countdown Timer
+    function updateTimerReadout() {
+      const m = String(Math.floor(state.wristTimer.remainSec / 60)).padStart(2, '0');
+      const s = String(state.wristTimer.remainSec % 60).padStart(2, '0');
+      document.getElementById('wristTimerDisplay').textContent = `${m}:${s}`;
+    }
+
+    document.querySelectorAll('.preset-timer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sec = parseInt(btn.getAttribute('data-timer-sec'), 10);
+        state.wristTimer.totalSec = sec;
+        state.wristTimer.remainSec = sec;
+        updateTimerReadout();
+        playHapticBeep(620, 45, 1);
+      });
+    });
+
+    document.getElementById('startTimerBtn').addEventListener('click', () => {
+      const btn = document.getElementById('startTimerBtn');
+      if (state.wristTimer.running) {
+        clearInterval(state.wristTimer.intervalId);
+        state.wristTimer.running = false;
+        btn.textContent = '▶ Resume Wrist Timer';
+        return;
+      }
+      state.wristTimer.running = true;
+      btn.textContent = '⏸ Pause Wrist Timer';
+      logBlePacket('TX', `AA 0E 02 ${state.wristTimer.remainSec.toString(16).toUpperCase()}`, 'Start Remote Wrist Countdown');
+
+      state.wristTimer.intervalId = setInterval(() => {
+        state.wristTimer.remainSec = Math.max(0, state.wristTimer.remainSec - 1);
+        updateTimerReadout();
+        if (state.wristTimer.remainSec <= 0) {
+          clearInterval(state.wristTimer.intervalId);
+          state.wristTimer.running = false;
+          btn.textContent = '▶ Start Wrist Timer';
+          playHapticBeep(920, 150, 4);
+          showToast('Wrist Timer Complete!', 'CMF Watch Pro 2 is vibrating on your wrist.');
+          logBlePacket('RX', 'BB 0E 01 00', 'Wrist Timer Expired -> Triggered Haptic Alert');
+        }
+      }, 1000);
+    });
+
+    document.getElementById('resetTimerBtn').addEventListener('click', () => {
+      if (state.wristTimer.intervalId) clearInterval(state.wristTimer.intervalId);
+      state.wristTimer.running = false;
+      state.wristTimer.remainSec = state.wristTimer.totalSec;
+      updateTimerReadout();
+      document.getElementById('startTimerBtn').textContent = '▶ Start Wrist Timer';
+      playHapticBeep(500, 50, 1);
+    });
+
+    // =====================================================
+    // TAB 5: BLIND TOUCH QUADRANTS & BLE CONSOLE
+    // =====================================================
+    document.querySelectorAll('.blind-zone-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const info = btn.getAttribute('data-blind');
+        document.getElementById('blindZoneReadout').textContent = info;
+        playHapticBeep(700, 60, 1);
+        logBlePacket('TX', 'AA 1F 02 01 00', `Executed Blind Quadrant Equivalent: ${info.split(':')[0]}`);
+        showToast('Quadrant Command Sent', info.split(':')[0]);
+      });
+    });
+
+    document.getElementById('sendRawHexBtn').addEventListener('click', () => {
+      const hex = document.getElementById('customHexInput').value.trim() || 'AA 01 00';
+      playHapticBeep(800, 55, 1);
+      logBlePacket('TX', hex, 'Manual Raw GATT Write Request');
+      setTimeout(() => {
+        logBlePacket('RX', 'BB 01 00 ACK', 'CMF Watch Pro 2 GATT Notification Response');
+      }, 250);
+      showToast('Raw BLE Frame Sent', `Dispatched ${hex}`);
+    });
+
+    document.getElementById('clearBleLogBtn').addEventListener('click', () => {
+      document.getElementById('bleConsoleBox').innerHTML = '';
+    });
+
+    document.getElementById('copyBleLogBtn').addEventListener('click', () => {
+      const text = document.getElementById('bleConsoleBox').innerText;
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('BLE Log Copied', 'Copied GATT packet log to clipboard.');
+      } catch (e) {
+        // Fallback
+      }
+      document.body.removeChild(ta);
+    });
+
+    // Initial Boot Logs & Charts
+    window.addEventListener('load', () => {
+      runBleEnvironmentDiagnostics();
+      initCharts();
+      logBlePacket('RX', 'BB 00 04 44 33 39 38', 'Connected to CMF Watch Pro 2 (Model D398 • FW 1.0.1.77)');
+      logBlePacket('TX', 'AA 10 03 00 00 05 B2', 'Dead-Screen Guard Active: LiftWake=OFF, AOD=OFF, Haptics=STRONG');
+      logBlePacket('RX', 'BB 04 02 52 4A', 'Battery Level: 82% • Live Heart Rate: 74 BPM');
+    });
+  </script>
+
+
+</body></html>

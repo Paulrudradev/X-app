@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- CMF Watch Pro 2 Bezel Outer Ring -->
+    <path
+        android:fillColor="#FF141418"
+        android:strokeColor="#FFFF5500"
+        android:strokeWidth="4.5"
+        android:pathData="M54,24A30,30 0,1 1,54 84A30,30 0,1 1,54 24Z" />
+    <!-- Crown Button on Top Right -->
+    <path
+        android:fillColor="#FFFF5500"
+        android:pathData="M83,42h5a2,2 0,0 1,2 2v10a2,2 0,0 1,-2 2h-5z" />
+    <!-- Inner Optical Pulse Waveform -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M34,55L44,55L49,42L56,67L62,50L66,55L74,55" />
+    <!-- Orange Active Dot Indicator -->
+    <path
+        android:fillColor="#FFFF5500"
+        android:pathData="M54,33m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+</vector>
